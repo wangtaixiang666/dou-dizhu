@@ -58,20 +58,77 @@
     const before = handCount(hand);
     const mySize = total(hand);
 
-    /* 最紧迫的对手还剩几张 */
-    let minOpp = 99;
+    /* 敌对阵营最少剩几张 / 队友剩几张 */
+    let minOpp = 99, mateLeft = 99;
     for (let i = 0; i < 3; i++) {
       if (i === seat) continue;
-      if (i === landlord || seat === landlord) {
-        if (isTeammate(seat, i, landlord)) continue;
-        minOpp = Math.min(minOpp, total(game.hands[i]));
-      }
+      const n = total(game.hands[i]);
+      if (isTeammate(seat, i, landlord)) { if (n < mateLeft) mateLeft = n; }
+      else if (n < minOpp) minOpp = n;
     }
     const urgent = minOpp <= 2 || mySize <= 5;
 
     /* 能一次走完就走 */
     for (const m of moves) {
       if (total(m) === mySize) return m;
+    }
+
+    const lastIsMate = last ? isTeammate(seat, game.lastSeat, landlord) : false;
+    const pickLowest = function (list) {
+      let best = null, bestS = 1e9;
+      for (const m of list) {
+        const s = scoreMove(hand, m, before, true);
+        if (s < bestS) { bestS = s; best = m; }
+      }
+      return best;
+    };
+    const bombsOf = function (list) {
+      return list.filter(function (m) {
+        const a = analyze(m);
+        return a.t === T.BOMB || a.t === T.ROCKET;
+      });
+    };
+    const normalOf = function (list) {
+      return list.filter(function (m) {
+        const a = analyze(m);
+        return a.t !== T.BOMB && a.t !== T.ROCKET;
+      });
+    };
+
+    /* ================= 防守：对手只剩 1 张 ================= */
+    if (minOpp <= 1 && !lastIsMate) {
+      if (!last) {
+        /* 我领出：先甩一手他绝对接不住的多张牌（对子 / 三条 / 顺子…） */
+        const multi = normalOf(moves).filter(function (m) { return analyze(m).t !== T.SINGLE; });
+        if (multi.length) return pickLowest(multi);
+        /* 只剩单张：把最大的那张打出去，顶死他 */
+        let b = null, br = -1;
+        for (const m of moves) { const a = analyze(m); if (a.r > br) { br = a.r; b = m; } }
+        return b;
+      }
+      /* 我跟牌：用最大的能压牌顶死；顶不住就上炸弹 */
+      let b = null, br = -1;
+      const normal = normalOf(moves);
+      for (const m of normal) { const a = analyze(m); if (a.r > br) { br = a.r; b = m; } }
+      if (b && br >= 14) return b;                 /* A 及以上已经封死 */
+      const boom = bombsOf(moves);
+      if (boom.length) return boom[0];             /* 大牌顶不住就直接炸 */
+      return b;                                    /* 没牌可炸，只能硬顶 */
+    }
+
+    /* ================= 配合：队友就要走完 ================= */
+    if (mateLeft <= 2) {
+      /* 队友出的牌一律不压，把出牌权留给他 */
+      if (lastIsMate) return null;
+      /* 我领出：出最小的单张，把机会交回去 */
+      if (!last) {
+        let b = null, br = 99;
+        for (const m of moves) {
+          const a = analyze(m);
+          if (a.t === T.SINGLE && a.r < br) { br = a.r; b = m; }
+        }
+        if (b) return b;
+      }
     }
 
     /* 领出：直接在所有候选里挑代价最小的 */
@@ -85,7 +142,7 @@
     }
 
     /* 跟牌 */
-    const teammateLed = isTeammate(seat, game.lastSeat, landlord);
+    const teammateLed = lastIsMate;
     /* 队友出的牌，一般不去压，除非自己能走完（上面已处理） */
     if (teammateLed && !urgent) {
       /* 队友只剩很少牌时不压；队友牌多且我这边能安全接管时考虑压 */

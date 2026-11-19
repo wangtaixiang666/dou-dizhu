@@ -134,7 +134,9 @@
         } else {
           if (remTotal !== k) continue;
           let okk = true;
-          for (let i = 0; i < remRanks.length; i++) if (rem[remRanks[i]] >= 3) { okk = false; break; }
+          /* 翅膀不能落在主牌点数的余牌上，否则 3333+4444 会被误判成飞机带单 */
+          for (let i = 0; i < k; i++) if (rem[s + i] > 0) { okk = false; break; }
+          for (let i = 0; okk && i < remRanks.length; i++) if (rem[remRanks[i]] >= 3) { okk = false; break; }
           if (okk) return { t: T.PLANE1, r: s, n: n };
         }
       }
@@ -147,8 +149,9 @@
   function beats(a, b) {
     if (!b) return !!a;
     if (!a) return false;
-    if (a.t === T.ROCKET) return true;
+    /* 王炸最大，任何牌都压不过（含另一手王炸）——必须先判 b */
     if (b.t === T.ROCKET) return false;
+    if (a.t === T.ROCKET) return true;
     if (a.t === T.BOMB && b.t !== T.BOMB) return true;
     if (b.t === T.BOMB && a.t !== T.BOMB) return false;
     if (a.t !== b.t) return false;
@@ -226,9 +229,9 @@
       if (c[r] >= 2) { m = new Int8Array(18); m[r] = 2; out.push(m); }
       if (c[r] >= 3) {
         m = new Int8Array(18); m[r] = 3; out.push(m);
-        const ks = kickSingles(c, r, 2);
+        const ks = kickSingles(c, r, 12);
         for (let j = 0; j < ks.length; j++) { const m2 = new Int8Array(18); m2[r] = 3; m2[ks[j]] = 1; out.push(m2); }
-        const kp = kickPairs(c, r, 2);
+        const kp = kickPairs(c, r, 8);
         for (let j = 0; j < kp.length; j++) { const m2 = new Int8Array(18); m2[r] = 3; m2[kp[j]] = 2; out.push(m2); }
       }
       if (c[r] === 4) { m = new Int8Array(18); m[r] = 4; out.push(m); }
@@ -268,6 +271,7 @@
         out.push(base);
         const rem = c.slice();
         for (let i = 0; i < k; i++) rem[s + i] -= 3;
+        for (let i = 0; i < k; i++) rem[s + i] = 0;   /* 主牌点数的余牌不能再当翅膀 */
         const ss = kickSinglesMulti(rem, k, 2);
         for (let j = 0; j < ss.length; j++) {
           const m = base.slice(); for (let q = 0; q < k; q++) m[ss[j][q]]++;
@@ -314,10 +318,11 @@
         const need = t === T.TRIO1 ? 1 : 2;
         for (let r = R + 1; r <= 17; r++) {
           if (c[r] < 3) continue;
-          const ks = need === 1 ? kickSingles(c, r, 1) : kickPairs(c, r, 1);
-          if (!ks.length) continue;
-          const m = new Int8Array(18); m[r] = 3; m[ks[0]] = need;
-          out.push(m);
+          const ks = need === 1 ? kickSingles(c, r, 12) : kickPairs(c, r, 8);
+          for (let j = 0; j < ks.length; j++) {
+            const m = new Int8Array(18); m[r] = 3; m[ks[j]] = need;
+            out.push(m);
+          }
         }
       } else if (t === T.STRAIGHT) {
         for (let s = R + 1; s + N - 1 <= 14; s++) {
@@ -349,6 +354,7 @@
           if (t === T.PLANE) { out.push(base); continue; }
           const rem = c.slice();
           for (let i = 0; i < k; i++) rem[s + i] -= 3;
+          for (let i = 0; i < k; i++) rem[s + i] = 0;   /* 主牌点数的余牌不能再当翅膀 */
           if (t === T.PLANE1) {
             const ss = kickSinglesMulti(rem, k, 1);
             for (let j = 0; j < ss.length; j++) {
@@ -551,7 +557,7 @@
       this.bottom = d.bottom;
       this.landlord = -1;
       this.bids = [0, 0, 0];
-      this.bidTurn = 0;
+      this.bidTurn = (opts.firstBid | 0) % 3;
       this.bidCount = 0;
       this.bestBid = 0;
       this.bestSeat = -1;
@@ -694,6 +700,8 @@
       } else {
         if (this.moveCount[L] === 1) spring = true;
       }
+      /* 认输结束的对局不计春天/反春天倍数，避免主动退出反而罚更重 */
+      if (this.resigned) spring = false;
       if (spring) this.multiplier *= 2;
       this.spring = spring;
       this.landlordWin = landlordWin;

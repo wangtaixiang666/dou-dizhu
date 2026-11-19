@@ -1081,6 +1081,157 @@
     .hero-btns .btn{font-size:11px;padding:6px 2px}
     .bubble{font-size:10.5px;max-width:150px}
   }
+
+  /* ================= 记牌器 ================= */
+  .cbar{
+    display:grid;grid-template-columns:repeat(15,minmax(0,1fr));gap:3px;
+    padding:5px 7px;border-radius:12px;
+    background:linear-gradient(180deg,rgba(0,0,0,.46),rgba(0,0,0,.24));
+    border:1px solid rgba(255,206,132,.2);
+    box-shadow:inset 0 1px 0 rgba(255,222,180,.12);
+  }
+  .cbar.hide{display:none}
+  .cbar .cell{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    border-radius:6px;padding:2px 0 1px;background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.05);line-height:1.05;
+  }
+  .cbar .rk{font-size:8.5px;color:#e0bda8;letter-spacing:0}
+  .cbar .cell b{font-size:12px;color:#ffe3b0;font-variant-numeric:tabular-nums;font-weight:800}
+  .cbar .cell.z{opacity:.34}
+  .cbar .cell.z .rk{text-decoration:line-through}
+  .cbar .cell.one{background:rgba(255,140,90,.18);border-color:rgba(255,150,100,.42)}
+  .cbar .cell.one b{color:#ffb59a}
+  .cbar-hint{font-size:9.5px;color:#c69a86;text-align:right;padding-right:2px}
+
+  /* ================= 回合倒计时 ================= */
+  .cdpill{
+    display:none;align-items:center;gap:3px;font-size:10.5px;font-weight:800;
+    font-variant-numeric:tabular-nums;padding:2px 8px;border-radius:20px;
+    background:rgba(0,0,0,.46);border:1px solid rgba(247,201,92,.34);color:#ffe3b0;
+  }
+  .cdpill.show{display:inline-flex}
+  .cdpill::before{content:"⏱";font-size:10px;opacity:.8}
+  .cdpill.warn{color:#ffb4a2;border-color:rgba(255,120,90,.68);animation:cdPulse .7s infinite}
+  @keyframes cdPulse{50%{opacity:.4}}
+  .turnbar{
+    height:3px;border-radius:3px;background:rgba(0,0,0,.34);overflow:hidden;
+    display:none;margin:0 2px;
+  }
+  .turnbar.show{display:block}
+  .turnbar i{
+    display:block;height:100%;width:100%;transform-origin:left center;
+    background:linear-gradient(90deg,#f7c95c,#ff9d68);
+  }
+  .turnbar.warn i{background:linear-gradient(90deg,#ff8a6a,#ff5a4a)}
+  .tutotag{
+    display:none;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:20px;
+    background:rgba(120,200,255,.16);border:1px solid rgba(120,200,255,.42);color:#bfe6ff;
+  }
+  .tutotag.show{display:inline-flex;animation:cdPulse 1.4s infinite}
+
+  /* ================= 明牌展示 ================= */
+  .rv{
+    position:absolute;left:50%;top:-4px;transform:translateX(-50%);
+    display:none;flex-wrap:wrap;justify-content:center;gap:1px;
+    max-width:100px;padding:2px 4px;border-radius:6px;z-index:6;
+    background:rgba(20,6,4,.82);border:1px solid rgba(247,201,92,.45);
+    box-shadow:0 4px 10px rgba(0,0,0,.6);
+  }
+  .rv.show{display:flex}
+  .rv b{
+    font-size:8.5px;font-weight:800;line-height:1.25;color:#ffeecb;
+    padding:0 1.5px;font-variant-numeric:tabular-nums;
+  }
+  .rv b.hot{color:#ff9d7a}
+  .seat.exposed .seat-info{box-shadow:0 0 0 1px rgba(120,200,255,.4),0 0 18px -6px rgba(120,200,255,.7)}
+  .mtag{
+    position:absolute;left:50%;top:-9px;transform:translateX(-50%);
+    font-size:8px;font-weight:800;padding:0 5px;border-radius:20px;z-index:7;
+    background:linear-gradient(180deg,#ffe9b0,#f0b545);color:#5a3406;white-space:nowrap;
+  }
+
+  /* ================= 加倍面板 ================= */
+  .panel.dbl{width:min(420px,94vw);text-align:left}
+  .dbl-head{text-align:center;margin-bottom:4px}
+  .dbl-seats{display:flex;flex-direction:column;gap:5px;margin:10px 0}
+  .dbl-row{
+    display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;
+    background:rgba(0,0,0,.26);border:1px solid rgba(255,255,255,.07);font-size:12px;
+  }
+  .dbl-row.me{border-color:rgba(247,201,92,.42);background:rgba(247,201,92,.1)}
+  .dbl-row .nm{flex:1;min-width:0;color:#ffe8d2;font-weight:700}
+  .dbl-row .rl{font-size:9px;color:#ffd39a;background:rgba(247,201,92,.16);padding:0 5px;border-radius:20px}
+  .dbl-row .rl.farmer{background:rgba(255,255,255,.1);color:#ffeed6}
+  .dbl-row .st{font-size:11px;color:#c9a08b;font-weight:800;font-variant-numeric:tabular-nums}
+  .dbl-row .st.on{color:#ffd97a}
+  .dbl-row .st.x4{color:#ff9d7a}
+  .dbl-btns{display:flex;gap:7px;margin-top:4px}
+  .dbl-btns .btn{flex:1 1 0;padding:10px 4px;font-size:12.5px}
+  .dbl-foot{display:flex;align-items:center;gap:8px;margin-top:9px}
+  .dbl-foot .btn{flex:0 0 auto;font-size:11.5px;padding:7px 12px}
+  .dbl-cd{margin-left:auto;font-size:11px;color:#d9ab94;font-variant-numeric:tabular-nums}
+  .dbl-cd b{color:#ffd97a}
+
+  /* ================= 残局 ================= */
+  .pz-grid{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+  .pz-card{
+    display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:14px;text-align:left;
+    background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(0,0,0,.2));
+    border:1px solid rgba(255,206,132,.18);cursor:pointer;transition:.15s;font-family:inherit;color:inherit;width:100%;
+  }
+  .pz-card:hover{border-color:rgba(255,210,120,.55);transform:translateY(-1px)}
+  .pz-card.done{background:linear-gradient(180deg,rgba(120,220,160,.14),rgba(0,0,0,.2));border-color:rgba(140,230,170,.34)}
+  .pz-idx{
+    flex:0 0 auto;width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+    font-size:16px;background:rgba(247,201,92,.14);border:1px solid rgba(247,201,92,.3)
+  }
+  .pz-card.done .pz-idx{background:rgba(120,220,160,.18);border-color:rgba(140,230,170,.4)}
+  .pz-main{flex:1;min-width:0}
+  .pz-t{font-size:13px;font-weight:800;color:#ffe8d2;display:flex;align-items:center;gap:6px}
+  .pz-s{font-size:10.5px;color:#cba692;margin-top:3px;line-height:1.5}
+  .pz-r{flex:0 0 auto;font-size:11px;font-weight:800;color:#ffd97a;white-space:nowrap}
+  .pz-badge{font-size:8.5px;padding:0 6px;border-radius:20px;background:rgba(120,220,160,.2);color:#b8f5cd;border:1px solid rgba(140,230,170,.4)}
+  .pz-goal{font-size:10px;color:#ffd39a;background:rgba(247,201,92,.12);padding:1px 6px;border-radius:20px}
+
+  /* ================= 战绩 ================= */
+  .hs-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:6px 0 12px}
+  .hs-cell{
+    padding:8px 6px;border-radius:11px;text-align:center;
+    background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(0,0,0,.22));
+    border:1px solid rgba(255,206,132,.16)
+  }
+  .hs-cell span{display:block;font-size:9.5px;color:#c9a08b;margin-bottom:3px}
+  .hs-cell b{font-size:14px;color:#ffe3b0;font-variant-numeric:tabular-nums}
+  .hs-cell.win b{color:#8ef0b0}
+  .hs-cell.lose b{color:#ff9d8a}
+  .hs-list{display:flex;flex-direction:column;gap:4px}
+  .hs-row{
+    display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:9px;
+    background:rgba(0,0,0,.2);border-left:2px solid rgba(255,255,255,.12);font-size:11px;
+  }
+  .hs-row.win{border-left-color:#5fd68c}
+  .hs-row.lose{border-left-color:#ff7d66}
+  .hs-row .t{font-size:9.5px;color:#a98a7a;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .hs-row .tag{font-size:9px;color:#ffd39a;background:rgba(247,201,92,.14);padding:0 5px;border-radius:20px;white-space:nowrap}
+  .hs-row .tag.f{background:rgba(255,255,255,.09);color:#ffeed6}
+  .hs-row .m{flex:1;min-width:0;color:#d9b6a2;font-size:9.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hs-row .d{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .hs-row .d.up{color:#ff9d7a}
+  .hs-row .d.dn{color:#7ee0a4}
+  .hs-empty{font-size:11.5px;color:#c9a08b;padding:12px 0;text-align:center}
+
+  @media (max-width:680px){
+    .cbar{gap:2px;padding:4px 5px}
+    .cbar .rk{font-size:7.5px}
+    .cbar .cell b{font-size:10.5px}
+    .tbar #btnBgm,.tbar #btnChat,.tbar #btnVoice{display:none}
+    .hs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .rv{max-width:76px}
+    .rv b{font-size:7.5px}
+    .dbl-btns{flex-wrap:wrap}
+    .dbl-btns .btn{flex:1 1 40%}
+  }
 </style>
 </head>
 <body>
@@ -1316,6 +1467,10 @@
             <div class="hub-ico">📊</div>
             <div><div class="hub-t">我的战绩</div><div class="hub-s" id="hubStatS">0 局 · —</div></div>
           </button>
+          <button class="hub-card" id="hubPuzzle" type="button">
+            <div class="hub-ico">🧩</div>
+            <div><div class="hub-t">残局闯关</div><div class="hub-s" id="hubPuzzleS">0 / 8 关</div></div>
+          </button>
           <button class="hub-card" id="hubGear" type="button">
             <div class="hub-ico">⚙️</div>
             <div><div class="hub-t">设置</div><div class="hub-s">账号 · 数据</div></div>
@@ -1341,9 +1496,12 @@
       <div class="mode-pill"><span id="tbMode">新手场</span><em id="tbBase">底分 1</em></div>
       <div class="spacer"></div>
       <div class="coin-pill sm"><i class="coin-ico"></i><b id="tbCoin">0</b></div>
+      <button class="icon-btn" id="btnCounter" title="记牌器" type="button">🎴</button>
+      <button class="icon-btn" id="btnTuto" title="托管（电脑代打）" type="button">🤖</button>
+      <button class="icon-btn" id="btnBgm" title="背景音乐" type="button">🎵</button>
       <button class="icon-btn" id="btnVoice" title="语音开关" type="button">🔊</button>
       <button class="icon-btn" id="btnChat" title="发言" type="button">💬</button>
-      <button class="icon-btn" id="btnNew" title="重新发牌" type="button">↻</button>
+      <button class="icon-btn" id="btnNew" title="认输（按本局失败结算）" type="button">🏳</button>
     </div>
 
     <div class="table">
@@ -1363,6 +1521,7 @@
       <div class="seats">
         <div class="seat" id="seat1">
           <div class="seat-stage">
+            <div class="rv" id="rv1"></div>
             <div class="seat-face" id="face1"></div>
             <div class="handfan seat-hand hide" id="hand1"></div>
           </div>
@@ -1373,6 +1532,7 @@
         </div>
         <div class="seat" id="seat2">
           <div class="seat-stage">
+            <div class="rv" id="rv2"></div>
             <div class="seat-face" id="face2"></div>
             <div class="handfan seat-hand hide" id="hand2"></div>
           </div>
@@ -1390,19 +1550,43 @@
       </div>
 
       <div class="bottom">
+        <div class="cbar hide" id="cbar"></div>
         <div class="me">
           <div class="info">
             <span>我</span><span class="role farmer" id="role0">农民</span>
             <span class="nowrap">剩 <b id="cnt0">17</b> 张</span>
+            <span class="cdpill" id="cdPill">20</span>
+            <span class="tutotag" id="tutoTag">托管中</span>
           </div>
           <div class="actions" id="actions"></div>
         </div>
+        <div class="turnbar" id="turnBar"><i></i></div>
         <div class="handwrap"><div class="hand" id="hand"></div></div>
       </div>
       </div>
       <div class="chatpanel" id="chatPanel"></div>
     </div>
   </section>
+
+  <!-- ========== 加倍 / 明牌 ========== -->
+  <div class="overlay" id="dblOv">
+    <div class="panel dbl">
+      <div class="dbl-head">
+        <h2 id="dblTitle">加倍时间</h2>
+        <div class="sub" id="dblSub">底牌已亮 · 各家自行决定倍数</div>
+      </div>
+      <div class="dbl-seats" id="dblSeats"></div>
+      <div class="dbl-btns" id="dblBtns">
+        <button class="btn ghost" data-dbl="1" type="button">不加倍</button>
+        <button class="btn gold" data-dbl="2" type="button">加倍 ×2</button>
+        <button class="btn gold" data-dbl="4" type="button">超级 ×4</button>
+      </div>
+      <div class="dbl-foot">
+        <button class="btn ghost" id="dblReveal" type="button">明牌 ×2</button>
+        <span class="dbl-cd" id="dblCd">自动选择 <b>8</b>s</span>
+      </div>
+    </div>
+  </div>
 
   <!-- ========== 结算 ========== -->
   <div class="overlay" id="overlay">
@@ -1473,7 +1657,7 @@
   const ITEMS = {
     item_double: { name: '翻倍卡', icon: '×2', price: 800, desc: '30 分钟内赢局金币翻倍' },
     item_shield: { name: '护身符', icon: '🛡', price: 600, desc: '下一局输局只扣一半' },
-    item_lucky:  { name: '幸运符', icon: '🍀', price: 400, desc: '下一局入场费全免' }
+    item_lucky:  { name: '幸运符', icon: '🍀', price: 400, desc: '下一局赢了额外多拿 30%' }
   };
   const LEVEL_STEP = 220;
   const LEVEL_TITLES = ['初来乍到', '牌桌新手', '小有名气', '老练牌手', '牌场老炮', '一方高手', '声名鹊起', '牌坛名宿', '一代宗师', '牌神'];
@@ -1491,6 +1675,8 @@
     if (!u.buff) u.buff = { doubleUntil: 0, shield: 0, lucky: 0 };
     if (u.exp === undefined) u.exp = 0;
     if (!u.sign) u.sign = { last: '', streak: 0 };
+    if (!u.history) u.history = [];
+    if (!u.puzzle) u.puzzle = {};
   }
   function levelOf(exp) { return 1 + Math.floor((exp || 0) / LEVEL_STEP); }
   function levelTitle(lv) { return LEVEL_TITLES[Math.min(LEVEL_TITLES.length - 1, Math.max(0, lv - 1))]; }
@@ -1955,6 +2141,8 @@
     el('sbRate').textContent = st.games ? Math.round(st.wins / st.games * 100) + '%' : '—';
     el('sbBest').textContent = fmt(st.best || user.coins);
     el('hubStatS').textContent = (st.games || 0) + ' 局 · ' + (st.games ? Math.round(st.wins / st.games * 100) + '%' : '—');
+    const pzDone = PUZZLES.filter(p => !!(user.puzzle || {})[p.id]).length;
+    if (el('hubPuzzleS')) el('hubPuzzleS').textContent = pzDone + ' / ' + PUZZLES.length + ' 关';
 
     const ss = signState();
     el('hubSignS').textContent = ss.done
@@ -1966,16 +2154,18 @@
     el('hubLevelS').textContent = 'Lv.' + lv + ' · 还差 ' + (LEVEL_STEP - ((user.exp || 0) % LEVEL_STEP)) + ' 经验';
   }
 
-  /* ================= 场次 ================= */
+  /* ================= 场次 =================
+     ante 不是“进门就扣的钱”，而是“需携带的筹码”。
+     之前把它当入场费直接扣掉，而平均单局输赢远小于它，导致除新手场外每局必亏。 */
   const MODES = {
-    rookie:  { key: 'rookie',  name: '新手场', icon: '🌱', base: 1,   ante: 0,     ai: 'easy',   coin: true, tag: '免费入场', hot: false,
+    rookie:  { key: 'rookie',  name: '新手场', icon: '🌱', base: 3,   ante: 0,     ai: 'easy',   coin: true, tag: '免费入场', hot: false,
                desc: '电脑出牌带点随意，适合熟悉规则' },
-    veteran: { key: 'veteran', name: '中级场', icon: '⚔️', base: 10,  ante: 500,   ai: 'normal', coin: true, tag: '底分 10', hot: true,
-               desc: '拆牌讲章法的启发式电脑，输了会记仇' },
-    master:  { key: 'master',  name: '高级场', icon: '👑', base: 50,  ante: 5000,  ai: 'hard',   coin: true, tag: '模型坐镇', hot: false,
-               desc: '训练好的价值网络参与裁决，最难的一档' },
-    grand:   { key: 'grand',   name: '大师场', icon: '🔥', base: 100, ante: 20000, ai: 'grand',  coin: true, tag: '巅峰对决', hot: false,
-               desc: '模型全开、压牌最狠，赢一局抵小场十局' }
+    veteran: { key: 'veteran', name: '中级场', icon: '⚔️', base: 30,  ante: 500,   ai: 'normal', coin: true, tag: '推荐', hot: true,
+               desc: '拆牌讲章法、会顶牌会让牌，输了会记仇' },
+    master:  { key: 'master',  name: '高级场', icon: '👑', base: 150, ante: 5000,  ai: 'hard',   coin: true, tag: '模型坐镇', hot: false,
+               desc: '价值网络与启发式集合作战，拆牌更狠' },
+    grand:   { key: 'grand',   name: '大师场', icon: '🔥', base: 400, ante: 20000, ai: 'grand',  coin: true, tag: '巅峰对决', hot: false,
+               desc: '防守规则兜底 + 模型全开，四档里最强' }
   };
   const MODE_ORDER = ['rookie', 'veteran', 'master', 'grand'];
 
@@ -1997,7 +2187,7 @@
         '<div class="mc-desc">' + m.desc + '</div>' +
         '<div class="mc-meta">' +
           '<span class="fee' + (m.ante === 0 ? ' free' : '') + '">' +
-            (m.ante === 0 ? '免费入场' : '入场 ' + fmt(m.ante)) +
+            (m.ante === 0 ? '免费入场' : '需携带 ' + fmt(m.ante)) +
           '</span>' +
           '<span>底分 ' + m.base + '</span>' +
         '</div>';
@@ -2015,19 +2205,23 @@
     }
     return modelNet || null;
   }
+  /* 每个难度只构造一次策略对象，避免每出一手牌都重建 */
+  const POLICY_CACHE = {};
   function policyFor(level) {
+    if (POLICY_CACHE[level]) return POLICY_CACHE[level];
+    let p = null;
     if (level === 'hard' || level === 'grand') {
       const net = getModel();
       if (net) {
-        return D.makeEnsemblePolicy(net, level === 'grand'
-          ? { name: 'grand', passMargin: 0.01, epsilon: 0.02 }
-          : { name: 'ensemble' });
+        p = level === 'grand'
+          ? D.makeGrandPolicy(net)
+          : D.makeEnsemblePolicy(net, { name: 'ensemble', passMargin: 0.20, prior: 0.05 });
+      } else {
+        p = D.HeuristicBot;
       }
-      return D.HeuristicBot;
-    }
-    if (level === 'easy') {
+    } else if (level === 'easy') {
       const base = D.HeuristicBot;
-      return {
+      p = {
         name: 'easy',
         chooseBid: function (g, s) { return Math.random() < 0.5 ? 0 : base.chooseBid(g, s); },
         chooseMove: function (g, s) {
@@ -2040,29 +2234,24 @@
           return base.chooseMove(g, s);
         }
       };
+    } else {
+      p = D.HeuristicBot;
     }
-    return D.HeuristicBot;
+    POLICY_CACHE[level] = p;
+    return p;
   }
 
   function enterMode(k) {
     const m = MODES[k];
     if (!m || !user) return;
-    if (m.coin && user.coins < m.ante) {
-      toast('金币不足，先签到或回新手场攒一点');
+    /* ante 只作为“需携带筹码”的门槛，不再进门就扣钱 */
+    if (m.coin && m.ante > 0 && user.coins < m.ante) {
+      toast('需携带 ' + fmt(m.ante) + ' 金币才能进' + m.name + '，先回新手场攒一点');
       return;
     }
     mode = m;
-    if (m.coin && m.ante > 0) {
-      if (user.buff.lucky > 0) {
-        user.buff.lucky--;
-        toast('幸运符生效，本局免入场费');
-      } else {
-        user.coins -= m.ante;
-      }
-      saveUser();
-    }
     el('tbMode').textContent = m.name;
-    el('tbBase').textContent = '底分 ' + m.base + (m.ai === 'hard' ? ' · 模型' : '');
+    el('tbBase').textContent = '底分 ' + m.base + (m.ai === 'hard' ? ' · 模型' : m.ai === 'grand' ? ' · 全开' : '');
     refreshCoins();
     showScreen('table');
     paintTableHero('idle', '准备中');
@@ -2078,6 +2267,699 @@
   let hintIdx = 0;
   let lastLegal = [];
   let toastTimer = null;
+
+  /* ================= 玩家设置（记牌器 / 音乐 / 托管） ================= */
+  const K_OPTS = 'ddz.opts.v1';
+  const OPTS = Object.assign({ counter: true, bgm: true, tuto: false, cd: 20 }, readJSON(K_OPTS, null) || {});
+  function saveOpts() { writeJSON(K_OPTS, OPTS); }
+
+  /* ================= 战绩记录与同步 ================= */
+  let historyMsg = '';
+  function historyKey(r) {
+    return [r.t, r.mode, r.role, r.delta, r.mul, r.puzzle || ''].join('|');
+  }
+  function mergeHistory(list) {
+    const seen = new Set(), out = [];
+    (list || []).slice().sort((a, b) => (a.t || 0) - (b.t || 0)).forEach(r => {
+      if (!r || !r.t) return;
+      const k = historyKey(r);
+      if (seen.has(k)) return;
+      seen.add(k); out.push(r);
+    });
+    return out.slice(-200);
+  }
+  function recordHistory(r) {
+    if (!user) return;
+    ensureProfile(user);
+    user.history = mergeHistory((user.history || []).concat([r]));
+  }
+  function historySummary(list) {
+    let games = 0, wins = 0, lGames = 0, lWins = 0, fGames = 0, fWins = 0;
+    let profit = 0, best = 0, streak = 0, maxStreak = 0, bombs = 0;
+    for (const r of list) {
+      games++; profit += r.delta || 0; bombs += r.bomb || 0;
+      if (r.role === '地主') { lGames++; if (r.win) lWins++; }
+      else { fGames++; if (r.win) fWins++; }
+      if (r.win) { wins++; streak++; if (streak > maxStreak) maxStreak = streak; }
+      else streak = 0;
+      if ((r.delta || 0) > best) best = r.delta;
+    }
+    return { games, wins, lGames, lWins, fGames, fWins, profit, best, maxStreak, bombs,
+      rate: games ? Math.round(wins / games * 100) : 0 };
+  }
+  function historyCode() {
+    if (!user) return '';
+    const json = JSON.stringify(user.history || []);
+    try { return 'DDZH1-' + btoa(unescape(encodeURIComponent(json))); } catch (e) { return 'DDZH1-' + json; }
+  }
+  function parseHistoryCode(s) {
+    s = String(s || '').trim();
+    if (!s) return null;
+    if (s.indexOf('DDZH1-') === 0) s = s.slice(6).trim();
+    let json = s;
+    if (s.charAt(0) !== '[') {
+      try { json = decodeURIComponent(escape(atob(s))); } catch (e) { return null; }
+    }
+    try {
+      const a = JSON.parse(json);
+      return Array.isArray(a) ? a : null;
+    } catch (e) { return null; }
+  }
+  function openHistory() {
+    if (!user) return;
+    ensureProfile(user);
+    const all = user.history || [];
+    const s = historySummary(all);
+    const cell = (lab, val, cls) => '<div class="hs-cell' + (cls ? ' ' + cls : '') + '"><span>' + lab + '</span><b>' + val + '</b></div>';
+    let rows = '';
+    const recent = all.slice(-60).reverse();
+    if (!recent.length) rows = '<div class="hs-empty">还没有战绩，去牌桌上打一局吧</div>';
+    for (const r of recent) {
+      const d = r.delta || 0;
+      rows += '<div class="hs-row ' + (r.win ? 'win' : 'lose') + '">' +
+        '<span class="t">' + new Date(r.t).toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' }) + '</span>' +
+        '<span class="tag' + (r.role === '农民' ? ' f' : '') + '">' + esc(r.mode || '') + ' · ' + esc(r.role || '') + '</span>' +
+        '<span class="m">' + (r.win ? '胜' : '负') + ' · ' + (r.mul || 1) + ' 倍' +
+          ((r.bomb || 0) ? ' · 炸 ' + r.bomb : '') + (r.spring ? ' · 春天' : '') + '</span>' +
+        '<span class="d ' + (d > 0 ? 'up' : d < 0 ? 'dn' : '') + '">' + (d > 0 ? '+' : '') + fmt(d) + '</span></div>';
+    }
+    openDrawer(
+      '<h3>我的战绩<button class="icon-btn" data-close-drawer type="button">✕</button></h3>' +
+      '<div class="hs-grid">' +
+        cell('总局数', s.games) + cell('胜率', s.rate + '%', 'win') +
+        cell('地主胜率', s.lGames ? Math.round(s.lWins / s.lGames * 100) + '%' : '—') +
+        cell('农民胜率', s.fGames ? Math.round(s.fWins / s.fGames * 100) + '%' : '—') +
+        cell('累计盈亏', fmtSigned(s.profit), s.profit >= 0 ? 'win' : 'lose') +
+        cell('单局最高', fmt(s.best)) + cell('最长连胜', s.maxStreak) + cell('炸弹次数', s.bombs) +
+      '</div>' +
+      '<div style="font-size:11px;color:#c9a08b;margin-bottom:6px">最近 60 局</div>' +
+      '<div class="hs-list">' + rows + '</div>' +
+      '<div style="font-size:11px;color:#c9a08b;margin:12px 0 5px">跨设备同步：导出战绩码，在另一台机器的「我的战绩」里导入并合并。</div>' +
+      '<textarea class="bk-code" id="hsOut" readonly rows="3">' + esc(historyCode()) + '</textarea>' +
+      '<div class="row-btns"><button class="btn ghost" id="hsCopy" type="button">复制战绩码</button>' +
+      '<button class="btn ghost" id="hsImp" type="button">导入战绩码</button></div>' +
+      '<textarea class="bk-code" id="hsIn" rows="3" placeholder="把另一台机器导出的 DDZH1-… 粘到这里"></textarea>' +
+      '<div id="hsMsg" style="font-size:11px;color:#ffb3a0;min-height:16px"></div>'
+    );
+    if (historyMsg) {
+      el('hsMsg').style.color = '#8ef0b0';
+      el('hsMsg').textContent = historyMsg;
+      historyMsg = '';
+    }
+    el('hsCopy').onclick = () => {
+      const ta = el('hsOut'); ta.focus(); ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { }
+      if (ok) { toast('战绩码已复制'); return; }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(ta.value).then(() => toast('战绩码已复制'), () => toast('请手动全选复制'));
+      } else toast('请手动全选复制');
+    };
+    el('hsImp').onclick = () => {
+      const got = parseHistoryCode(el('hsIn').value);
+      if (!got) { el('hsMsg').textContent = '战绩码无效，请检查是否复制完整'; return; }
+      const before = (user.history || []).length;
+      user.history = mergeHistory((user.history || []).concat(got));
+      saveUser();
+      historyMsg = '已合并 ' + ((user.history || []).length - before) + ' 条新战绩';
+      toast('战绩已同步');
+      openHistory();
+    };
+  }
+
+  /* ================= 残局闯关 ================= */
+  const PUZZLE_MODE = {
+    key: 'puzzle', name: '残局', icon: '🧩', base: 0, ante: 0,
+    ai: 'normal', coin: false, puzzle: true, tag: '闯关', desc: '固定牌局，一键开打'
+  };
+  const PUZZLES = [
+    { id: 'p1', name: '初出茅庐', reward: 200, landlord: 0, turn: 0, last: '', lastSeat: -1,
+      me: '3456789T', a1: '44', a2: '55',
+      desc: '一手长顺直接走完，先熟悉残局的节奏。', tip: '点「提示」选中顺子，再点「出牌」即可过关。' },
+    { id: 'p2', name: '顶牌封路', reward: 300, landlord: 1, turn: 0, last: '4', lastSeat: 1, passes: 1,
+      me: '234567', a1: '9', a2: '334',
+      desc: '地主只剩一张，出小牌就是放他走。', tip: '地主出单 4，用手里的 2 顶死，再甩顺子。' },
+    { id: 'p3', name: '让队友走', reward: 350, landlord: 1, turn: 0, last: '3', lastSeat: 2, passes: 0,
+      me: '579JA', a1: '333', a2: 'K',
+      desc: '队友已经出过一手，这一轮别抢。', tip: '选「不出」。地主也压不住队友的 3，队友下一轮一张 K 走人。' },
+    { id: 'p4', name: '炸弹收官', reward: 400, landlord: 0, turn: 0, last: '44', lastSeat: 2, passes: 0,
+      me: '9999', a1: '357', a2: 'KQJ8',
+      desc: '对手出对子想抢节奏，直接炸掉。', tip: '四张 9 是炸弹，压对子并直接走完。' },
+    { id: 'p5', name: '飞机上天', reward: 450, landlord: 0, turn: 0, last: '', lastSeat: -1,
+      me: '33344456', a1: '5566', a2: '7788',
+      desc: '两组三张带两张单，一手起飞。', tip: '333444 带 5、6 是合法的飞机带单，一次出完。' },
+    { id: 'p6', name: '四带两单', reward: 450, landlord: 0, turn: 0, last: '', lastSeat: -1,
+      me: '333359', a1: '4467', a2: 'TTK',
+      desc: '四条加两张散牌，正好一手清空。', tip: '选四张 3，再带 5 和 9。' },
+    { id: 'p7', name: '对子压制', reward: 500, landlord: 1, turn: 0, last: '55', lastSeat: 1, passes: 1,
+      me: '2234567', a1: '99', a2: '33',
+      desc: '地主出对 5，手里还攥着一对 9。', tip: '先用对 2 压住，再出顺子 34567。' },
+    { id: 'p8', name: '终局博弈', reward: 600, landlord: 0, turn: 0, last: '', lastSeat: -1,
+      me: '3334445566', a1: '778899', a2: 'TTJJQQ',
+      desc: '两组三张带两对，收官的一手。', tip: '333444 带对 5、对 6，飞机带对一次走完。' }
+  ];
+  let curPuzzle = null;
+
+  function parseCards(str, cursor) {
+    const counts = new Int8Array(18), ids = [];
+    const tokens = String(str || '').replace(/\s/g, '').match(/10|[3-9TJQKA2wW]/g) || [];
+    for (const tk of tokens) {
+      let r;
+      if (tk === '10' || tk === 'T') r = 10;
+      else if (tk === 'J') r = 11;
+      else if (tk === 'Q') r = 12;
+      else if (tk === 'K') r = 13;
+      else if (tk === 'A') r = 14;
+      else if (tk === '2') r = 15;
+      else if (tk === 'w') r = 16;
+      else if (tk === 'W') r = 17;
+      else r = +tk;
+      if (r < 3 || r > 17) continue;
+      const cap = r === 16 || r === 17 ? 1 : 4;
+      if (counts[r] >= cap) continue;
+      let id;
+      if (r >= 16) id = r === 16 ? 52 : 53;
+      else {
+        const k = (cursor[r] || 0);
+        id = 4 * (r - 3) + k;
+        cursor[r] = k + 1;
+      }
+      counts[r]++; ids.push(id);
+    }
+    return { counts: counts, ids: ids };
+  }
+
+  function buildPuzzleGame(pz) {
+    const g = new D.Game({ rand: Math.random });
+    const cursor = {};
+    const parts = [parseCards(pz.me, cursor), parseCards(pz.a1, cursor), parseCards(pz.a2, cursor)];
+    g.hands = parts.map(p => p.counts);
+    g.ids = parts.map(p => p.ids.slice());
+    g.landlord = pz.landlord;
+    g.bids = [0, 0, 0];
+    g.bidTurn = 3;
+    g.bidCount = 3;
+    g.bestSeat = pz.landlord;
+    g.base = 1;
+    g.phase = 'play';
+    g.turn = pz.turn || 0;
+    g.lastSeat = pz.lastSeat === undefined ? -1 : pz.lastSeat;
+    g.lastMove = pz.last ? parseCards(pz.last, {}).counts : null;
+    g.passes = pz.passes || 0;
+    g.played = new Int8Array(18);
+    if (g.lastMove) {
+      for (let r = 3; r <= 17; r++) g.played[r] += g.lastMove[r];
+    }
+    g.multiplier = 1;
+    g.winner = -1;
+    g.moveCount = [0, 0, 0];
+    g.bombCount = 0;
+    g.history = [];
+    g.redealCount = 0;
+    g.resigned = false;
+    g.puzzle = true;
+    const used = new Set();
+    for (const arr of g.ids) for (const id of arr) used.add(id);
+    const pool = [];
+    for (let i = 0; i < 54; i++) if (!used.has(i)) pool.push(i);
+    g.bottom = pool.slice(0, 3);
+    return g;
+  }
+
+  function openPuzzles() {
+    if (!user) return;
+    ensureProfile(user);
+    const done = user.puzzle || {};
+    let cards = '';
+    PUZZLES.forEach((p, i) => {
+      const ok = !!done[p.id];
+      cards += '<button class="pz-card' + (ok ? ' done' : '') + '" data-pz="' + i + '" type="button">' +
+        '<div class="pz-idx">' + (ok ? '✓' : String(i + 1)) + '</div>' +
+        '<div class="pz-main"><div class="pz-t">' + esc(p.name) +
+          (ok ? '<span class="pz-badge">已通关</span>' : '') + '</div>' +
+          '<div class="pz-s">' + esc(p.desc) + '</div></div>' +
+        '<div class="pz-r"><span class="pz-goal">首通 +' + p.reward + '</span></div></button>';
+    });
+    const n = PUZZLES.filter(p => !!done[p.id]).length;
+    openDrawer(
+      '<h3>残局闯关<button class="icon-btn" data-close-drawer type="button">✕</button></h3>' +
+      '<div style="font-size:11.5px;color:#e8bda6;margin-bottom:8px">' +
+        '固定牌局，不靠发牌运气。通关 ' + n + ' / ' + PUZZLES.length + '，每关只有首次通关给金币。' +
+      '</div><div class="pz-grid">' + cards + '</div>'
+    );
+    drawerBody.querySelectorAll('[data-pz]').forEach(b => {
+      b.onclick = () => { closeDrawer(); startPuzzle(+b.dataset.pz); };
+    });
+  }
+
+  function startPuzzle(i) {
+    if (!user) return;
+    const p = PUZZLES[Math.max(0, Math.min(PUZZLES.length - 1, i | 0))];
+    if (!p) return;
+    curPuzzle = p;
+    mode = PUZZLE_MODE;
+    el('tbMode').textContent = '残局 · ' + p.name;
+    el('tbBase').textContent = '首通 +' + p.reward;
+    refreshCoins();
+    showScreen('table');
+    paintTableHero('idle', '准备中');
+    startRound();
+  }
+
+  /* ================= 背景音乐（WebAudio 程序化生成，无外部音频文件） ================= */
+  let bgmOn = OPTS.bgm !== false;
+  let audioCtx = null, bgmTimer = null, bgmStep = 0;
+  const BGM_MELODY = [60, 64, 67, 72, 71, 67, 64, 62, 65, 69, 72, 69, 67, 64, 62, 60];
+  const BGM_BASS = [48, 48, 43, 43, 45, 45, 48, 48];
+  function noteHz(n) { return 440 * Math.pow(2, (n - 69) / 12); }
+  function bgmTick() {
+    if (!bgmOn || !audioCtx || audioCtx.state !== 'running') return;
+    try {
+      const now = audioCtx.currentTime;
+      const step = bgmStep++;
+      const n = BGM_MELODY[step % BGM_MELODY.length];
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'triangle'; o.frequency.value = noteHz(n);
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.exponentialRampToValueAtTime(0.045, now + 0.025);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
+      o.connect(g); g.connect(audioCtx.destination); o.start(now); o.stop(now + 0.4);
+      if (step % 2 === 0) {
+        const b = audioCtx.createOscillator(), bg = audioCtx.createGain();
+        b.type = 'sine'; b.frequency.value = noteHz(BGM_BASS[(step / 2) % BGM_BASS.length]);
+        bg.gain.setValueAtTime(0.0001, now);
+        bg.gain.exponentialRampToValueAtTime(0.035, now + 0.03);
+        bg.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+        b.connect(bg); bg.connect(audioCtx.destination); b.start(now); b.stop(now + 0.62);
+      }
+    } catch (e) { }
+  }
+  function startBgm() {
+    if (!bgmOn) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    try {
+      if (!audioCtx) audioCtx = new AC();
+      if (audioCtx.state === 'suspended') {
+        const p = audioCtx.resume();
+        if (p && p.catch) p.catch(() => { });
+      }
+      if (!bgmTimer) { bgmTick(); bgmTimer = setInterval(bgmTick, 360); }
+    } catch (e) { }
+  }
+  function stopBgm() {
+    if (bgmTimer) { clearInterval(bgmTimer); bgmTimer = null; }
+    try { if (audioCtx && audioCtx.suspend) { const p = audioCtx.suspend(); if (p && p.catch) p.catch(() => { }); } } catch (e) { }
+  }
+  function paintBgmBtn() {
+    const b = el('btnBgm');
+    if (!b) return;
+    b.classList.toggle('off', !bgmOn);
+    b.title = bgmOn ? '背景音乐已开（点击关闭）' : '背景音乐已关（点击打开）';
+  }
+  function toggleBgm() {
+    bgmOn = !bgmOn;
+    OPTS.bgm = bgmOn; saveOpts(); paintBgmBtn();
+    if (bgmOn) startBgm(); else stopBgm();
+    toast(bgmOn ? '背景音乐已打开' : '背景音乐已关闭');
+  }
+  document.addEventListener('pointerdown', function unlockBgm() {
+    if (bgmOn) startBgm();
+    document.removeEventListener('pointerdown', unlockBgm);
+    document.removeEventListener('keydown', unlockBgm);
+  });
+  document.addEventListener('keydown', function unlockBgmKey() {
+    if (bgmOn) startBgm();
+    document.removeEventListener('pointerdown', unlockBgmKey);
+    document.removeEventListener('keydown', unlockBgmKey);
+  });
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stopBgm();
+    else if (bgmOn) startBgm();
+  });
+
+  /* ================= 记牌器 ================= */
+  let counterOn = OPTS.counter !== false;
+  const CBAR_RANKS = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+
+  /* 未现张数 = 全副牌 - 我的手牌 - 已出的牌 - 明牌对手的手牌 */
+  function remainByRank() {
+    const out = new Int8Array(18);
+    for (let r = 3; r <= 15; r++) out[r] = 4;
+    out[16] = 1; out[17] = 1;
+    if (!game) return out;
+    for (let r = 3; r <= 17; r++) out[r] -= game.hands[HUMAN][r] + game.played[r];
+    if (game.reveal) {
+      for (const s of [1, 2]) if (game.reveal[s]) {
+        for (let r = 3; r <= 17; r++) out[r] -= game.hands[s][r];
+      }
+    }
+    for (let r = 3; r <= 17; r++) if (out[r] < 0) out[r] = 0;
+    return out;
+  }
+
+  function renderCounter() {
+    const bar = el('cbar');
+    if (!bar) return;
+    const show = counterOn && !!game;
+    bar.classList.toggle('hide', !show);
+    if (!show) return;
+    const rem = remainByRank();
+    let h = '';
+    for (const r of CBAR_RANKS) {
+      const n = rem[r];
+      const lab = r === 16 ? '小' : r === 17 ? '大' : D.rankLabel(r);
+      h += '<div class="cell' + (n === 0 ? ' z' : '') + (n === 1 ? ' one' : '') + '">' +
+        '<span class="rk">' + lab + '</span><b>' + n + '</b></div>';
+    }
+    bar.innerHTML = h;
+    bar.title = '记牌器：每个点数还剩几张没出现（已扣掉我的手牌与所有已出的牌）';
+  }
+
+  function paintCounterBtn() {
+    const b = el('btnCounter');
+    if (b) {
+      b.classList.toggle('off', !counterOn);
+      b.title = counterOn ? '记牌器已开（点击关闭）' : '记牌器已关（点击打开）';
+    }
+  }
+
+  function toggleCounter(force) {
+    counterOn = force === undefined ? !counterOn : !!force;
+    OPTS.counter = counterOn; saveOpts();
+    paintCounterBtn(); renderCounter();
+    toast(counterOn ? '记牌器已打开' : '记牌器已关闭');
+  }
+
+  /* 明牌：把对手的手牌直接摊在座位上 */
+  function renderReveal() {
+    for (const s of [1, 2]) {
+      const box = el('rv' + s), seat = el('seat' + s);
+      if (!box || !seat) continue;
+      const on = !!(game && game.reveal && game.reveal[s] && game.landlord >= 0 && !roundOver);
+      box.classList.toggle('show', on);
+      seat.classList.toggle('exposed', on);
+      if (!on) { box.innerHTML = ''; continue; }
+      const hand = game.hands[s];
+      let h = '';
+      for (let r = 17; r >= 3; r--) {
+        for (let k = 0; k < hand[r]; k++) {
+          const lab = r === 16 ? '小' : r === 17 ? '大' : D.rankLabel(r);
+          h += '<b class="' + (r >= 15 ? 'hot' : '') + '">' + lab + '</b>';
+        }
+      }
+      box.innerHTML = '<span class="mtag">明牌 ×2</span>' + h;
+    }
+  }
+
+  /* ================= 回合倒计时 ================= */
+  let turnTimer = null, turnEnd = 0, turnDur = 0, turnFire = null, autoActing = false;
+
+  function stopTurnTimer() {
+    if (turnTimer) { clearInterval(turnTimer); turnTimer = null; }
+    turnFire = null; turnEnd = 0; turnDur = 0;
+    const p = el('cdPill'), b = el('turnBar');
+    if (p) { p.classList.remove('show', 'warn'); p.textContent = ''; }
+    if (b) { b.classList.remove('show', 'warn'); if (b.firstElementChild) b.firstElementChild.style.width = '0%'; }
+  }
+
+  function paintTurnTimer() {
+    const left = Math.max(0, turnEnd - Date.now());
+    const p = el('cdPill'), b = el('turnBar');
+    const sec = Math.ceil(left / 1000);
+    if (p) { p.textContent = sec + 's'; p.classList.toggle('warn', left <= 5000); }
+    if (b) {
+      const pct = turnDur ? Math.max(0, Math.min(1, left / turnDur)) : 0;
+      if (b.firstElementChild) b.firstElementChild.style.width = (pct * 100).toFixed(1) + '%';
+      b.classList.toggle('warn', left <= 5000);
+    }
+  }
+
+  function startTurnTimer(sec, onFire) {
+    stopTurnTimer();
+    turnDur = sec * 1000; turnEnd = Date.now() + turnDur; turnFire = onFire;
+    const p = el('cdPill'), b = el('turnBar');
+    if (p) p.classList.add('show');
+    if (b) b.classList.add('show');
+    paintTurnTimer();
+    turnTimer = setInterval(function () {
+      if (!turnEnd) return;
+      paintTurnTimer();
+      if (Date.now() >= turnEnd) {
+        const fn = turnFire;
+        stopTurnTimer();
+        if (fn) fn();
+      }
+    }, 100);
+  }
+
+  /* 超时：叫分自动不叫；出牌能过就过，不能过就出最小一手 */
+  function onTurnTimeout() {
+    if (!game || roundOver) return;
+    if (game.phase === 'bid' && game.bidTurn === HUMAN) {
+      toast('超时未叫分，自动不叫');
+      humanBid(0);
+      return;
+    }
+    if (game.phase === 'play' && game.turn === HUMAN) {
+      if (game.canPass()) { toast('超时，自动不出'); humanPass(); return; }
+      const ms = game.legalMoves(HUMAN);
+      if (!ms.length) return;
+      toast('超时，自动出最小一手');
+      const mv = ms.slice().sort(function (a, b) {
+        const aa = D.analyze(a), bb = D.analyze(b);
+        return (aa.n - bb.n) || (aa.r - bb.r);
+      })[0];
+      selected.clear();
+      D.countsToIds(game.ids[HUMAN], mv).forEach(function (id) { selected.add(id); });
+      humanPlay();
+    }
+  }
+
+  /* ================= 托管 ================= */
+  let tutoOn = !!OPTS.tuto;
+  let autoTimer = null;
+
+  function paintTuto() {
+    const tag = el('tutoTag'), btn = el('btnTuto');
+    if (tag) tag.classList.toggle('show', tutoOn);
+    if (btn) {
+      btn.classList.toggle('off', !tutoOn);
+      btn.title = tutoOn ? '托管中 · 点一下取消' : '托管（电脑代打）';
+    }
+  }
+
+  function autoHumanAct() {
+    if (!game || roundOver) return;
+    if (game.phase === 'bid' && game.bidTurn === HUMAN) {
+      let sc = 0;
+      try { sc = policyFor(mode.ai).chooseBid(game, HUMAN); } catch (e) { sc = 0; }
+      sc = sc | 0;
+      if (sc > 0 && sc <= game.bestBid) sc = 0;
+      if (sc > 3) sc = 3;
+      if (sc < 0) sc = 0;
+      humanBid(sc);
+      return;
+    }
+    if (game.phase !== 'play' || game.turn !== HUMAN) return;
+    let mv = null;
+    try { mv = D.HeuristicBot.chooseMove(game, HUMAN); } catch (e) { mv = null; }
+    if (!mv) {
+      if (game.canPass()) { humanPass(); return; }
+      const ms = game.legalMoves(HUMAN);
+      if (!ms.length) return;
+      mv = ms[0];
+    }
+    selected.clear();
+    D.countsToIds(game.ids[HUMAN], mv).forEach(function (id) { selected.add(id); });
+    humanPlay();
+  }
+
+  function setTuto(on) {
+    tutoOn = !!on; OPTS.tuto = tutoOn; saveOpts();
+    paintTuto();
+    clearTimeout(autoTimer);
+    if (tutoOn) {
+      toast('已开启托管，电脑代打；点自己的牌或再点一次可取消');
+      if (game && !roundOver && game.phase === 'bid' && game.bidTurn === HUMAN) beginHumanBidTurn();
+      else if (game && !roundOver && game.phase === 'play' && game.turn === HUMAN) beginHumanPlayTurn();
+    } else {
+      toast('已取消托管');
+      if (game && !roundOver && game.phase === 'play' && game.turn === HUMAN) beginHumanPlayTurn();
+    }
+  }
+
+  /* 叫分 / 出牌的“人类回合”入口：统一挂倒计时与托管 */
+  function beginHumanBidTurn() {
+    if (!game || roundOver) return;
+    render();
+    if (roundOver) return;
+    setMood(el('tbAv'), 'think');
+    el('thMood').textContent = tutoOn ? '托管中 · 叫分' : '要不要叫？';
+    if (tutoOn) startTurnTimer(3, function () { autoActing = true; autoHumanAct(); autoActing = false; });
+    else startTurnTimer(OPTS.cd || 20, onTurnTimeout);
+  }
+
+  function beginHumanPlayTurn() {
+    if (!game || roundOver) return;
+    render();
+    if (roundOver) return;
+    setMood(el('tbAv'), 'think');
+    el('thMood').textContent = tutoOn ? '托管中' : '轮到你了';
+    if (tutoOn) startTurnTimer(3, function () { autoActing = true; autoHumanAct(); autoActing = false; });
+    else startTurnTimer(OPTS.cd || 20, onTurnTimeout);
+  }
+
+  /* ================= 加倍 / 明牌 ================= */
+  let dblTimer = null;
+
+  function closeDoubleOverlay() {
+    if (dblTimer) { clearInterval(dblTimer); dblTimer = null; }
+    const ov = el('dblOv');
+    if (ov) ov.classList.remove('show');
+  }
+
+  function dblLabel(v) {
+    return v >= 4 ? '超级 ×4' : v >= 2 ? '加倍 ×2' : '不加倍';
+  }
+
+  function aiDoubleChoice(seat) {
+    const hs = D.handStrength(game.hands[seat]);
+    const isL = seat === game.landlord;
+    const r = Math.random();
+    if (isL) {
+      if (hs >= 0.62) return r < 0.55 ? 4 : 2;
+      if (hs >= 0.42) return r < 0.35 ? 2 : 1;
+      if (hs >= 0.30 && r < 0.18) return 2;
+    } else {
+      if (hs >= 0.60) return r < 0.40 ? 4 : 2;
+      if (hs >= 0.40) return r < 0.30 ? 2 : 1;
+      if (hs >= 0.28 && r < 0.15) return 2;
+    }
+    return 1;
+  }
+
+  function beginDoubleStage() {
+    if (!game || game.phase !== 'play') return;
+    closeDoubleOverlay();
+    game.doubles = [1, 1, 1];
+    game.reveal = [false, false, false];
+    if (mode && mode.puzzle) { startPlayAfterDouble(); return; }
+
+    const L = game.landlord;
+    const ai = [1, 1, 1];
+    for (const s of [1, 2]) {
+      ai[s] = aiDoubleChoice(s);
+      if (ai[s] > 1 && Math.random() < 0.07) game.reveal[s] = true;
+    }
+    const picked = [null, null, null];
+    let chosen = false;
+
+    const rows = function () {
+      let h = '';
+      for (const s of [1, 2, HUMAN]) {
+        const me = s === HUMAN;
+        let st = '待选择';
+        if (picked[s] === null) st = '…';
+        else st = dblLabel(picked[s]);
+        let cls = 'st';
+        if (picked[s] === 2) cls += ' on';
+        if (picked[s] >= 4) cls += ' on x4';
+        h += '<div class="dbl-row' + (me ? ' me' : '') + '">' +
+          '<span class="nm">' + (me ? '我' : '电脑 ' + (s === 1 ? 'A' : 'B')) + '</span>' +
+          '<span class="rl' + (s === L ? '' : ' farmer') + '">' + (s === L ? '地主' : '农民') + '</span>' +
+          '<span class="' + cls + '">' + st + (game.reveal[s] ? ' · 明牌' : '') + '</span></div>';
+      }
+      el('dblSeats').innerHTML = h;
+    };
+    const stopCd = function () { if (dblTimer) { clearInterval(dblTimer); dblTimer = null; } };
+
+    el('dblTitle').textContent = L === HUMAN ? '你当地主 · 加倍时间' : '加倍时间';
+    el('dblSub').innerHTML = '叫分 <b>' + game.base + '</b> 分 · 各家自己决定倍数';
+    picked[HUMAN] = null;
+    rows();
+    el('dblReveal').classList.remove('gold');
+    el('dblReveal').textContent = '明牌 ×2';
+    el('dblOv').classList.add('show');
+
+    const finish = function () {
+      stopCd();
+      el('dblOv').classList.remove('show');
+      startPlayAfterDouble();
+    };
+
+    const choose = function (v) {
+      if (chosen) return;
+      chosen = true;
+      stopCd();
+      picked[HUMAN] = v;
+      game.doubles[HUMAN] = v;
+      rows();
+      sfx('coin');
+      /* AI 逐个亮出选择，读起来像真的在等人 */
+      let i = 0;
+      const seq = [1, 2];
+      const next = function () {
+        if (i >= seq.length) { setTimeout(finish, 420); return; }
+        const s = seq[i++];
+        picked[s] = ai[s];
+        game.doubles[s] = ai[s];
+        rows();
+        sfx('coin');
+        setTimeout(next, 420);
+      };
+      setTimeout(next, 300);
+    };
+
+    el('dblOv').querySelectorAll('[data-dbl]').forEach(function (b) {
+      b.onclick = function () { choose(+b.dataset.dbl); };
+    });
+    el('dblReveal').onclick = function () {
+      game.reveal[HUMAN] = !game.reveal[HUMAN];
+      el('dblReveal').classList.toggle('gold', game.reveal[HUMAN]);
+      el('dblReveal').textContent = game.reveal[HUMAN] ? '已明牌 ×2' : '明牌 ×2';
+      sfx('flick');
+      rows();
+    };
+
+    /* 8 秒不选按“不加倍”处理；托管状态 1.5 秒自动 */
+    let left = tutoOn ? 2 : 8;
+    el('dblCd').innerHTML = '自动选择 <b>' + left + '</b>s';
+    dblTimer = setInterval(function () {
+      left--;
+      el('dblCd').innerHTML = left > 0 ? '自动选择 <b>' + left + '</b>s' : '已自动选择';
+      if (left <= 0) choose(1);
+    }, 1000);
+  }
+
+  function startPlayAfterDouble() {
+    if (!game) return;
+    render();
+    if (mode && mode.puzzle && curPuzzle) {
+      tipEl.innerHTML = curPuzzle.tip || '残局开始，赢下这一局';
+      scheduleStep(700);
+      return;
+    }
+    const L = game.landlord;
+    let tip = '叫分 <b>' + game.base + '</b> 分 · ' + (L === HUMAN ? '你是地主，先出牌' : '电脑是地主，先出牌');
+    const extra = [];
+    const myD = (game.doubles && game.doubles[HUMAN]) || 1;
+    if (myD > 1) extra.push(myD >= 4 ? '超级加倍' : '加倍');
+    if (game.reveal && game.reveal[HUMAN]) extra.push('明牌');
+    if (extra.length) tip += ' · ' + extra.join(' ');
+    tipEl.innerHTML = tip;
+    scheduleStep(700);
+  }
+
+  /* 桌面出牌位：两家都过、进入新一轮时先清掉上一轮的残留，
+     否则上一轮的“不出”会和本轮的新牌叠在一起 */
+  function markTable(seat, v) {
+    if (game && game.lastMove === null && game.lastSeat === -1) {
+      tableCards = [null, null, null];
+      return;
+    }
+    if (v !== null && v !== undefined) tableCards[seat] = v;
+  }
 
   function toast(msg) {
     const t = el('toast');
@@ -2499,6 +3381,10 @@
 
   function toggleCard(id) {
     if (busy || roundOver) return;
+    if (tutoOn && !autoActing) {
+      tutoOn = false; OPTS.tuto = false; saveOpts(); paintTuto();
+      toast('手动出牌，已取消托管');
+    }
     if (selected.has(id)) selected.delete(id); else selected.add(id);
     hintIdx = 0;
     renderHand();
@@ -2642,6 +3528,8 @@
     renderBottomCards();
     renderPlays();
     renderHand();
+    renderCounter();
+    renderReveal();
     updateActions();
     refreshCoins();
   }
@@ -2649,6 +3537,7 @@
   /* ================= 叫分 ================= */
   function humanBid(score) {
     if (game.phase !== 'bid' || game.bidTurn !== HUMAN) return;
+    stopTurnTimer();
     game.bid(HUMAN, score);
     setMood(el('tbAv'), score > 0 ? 'smug' : 'think', 1500);
     throwBidToken(HUMAN, score);
@@ -2668,8 +3557,8 @@
     if (game.phase === 'play') {
       tableCards = [null, null, null];
       render();
-      tipEl.innerHTML = '叫分 <b>' + game.base + '</b> 分 · ' + (game.landlord === HUMAN ? '你是地主，先出牌' : '电脑是地主，先出牌');
-      scheduleStep(700);
+      tipEl.innerHTML = '叫分 <b>' + game.base + '</b> 分 · 加倍阶段';
+      beginDoubleStage();
       return;
     }
     render();
@@ -2682,12 +3571,8 @@
   function step() {
     if (roundOver || !game) return;
     if (game.phase === 'bid') {
-      if (game.bidTurn === HUMAN) {
-        render();
-        setMood(el('tbAv'), 'think');
-        el('thMood').textContent = '要不要叫？';
-        return;
-      }
+      if (game.bidTurn === HUMAN) { beginHumanBidTurn(); return; }
+      stopTurnTimer();
       const seat = game.bidTurn;
       const p = policyFor(mode.ai);
       let sc = 0;
@@ -2702,11 +3587,8 @@
       return;
     }
     if (game.phase === 'play') {
-      if (game.turn === HUMAN) {
-        render();
-        if (!roundOver) { setMood(el('tbAv'), 'think'); el('thMood').textContent = '轮到你了'; }
-        return;
-      }
+      if (game.turn === HUMAN) { beginHumanPlayTurn(); return; }
+      stopTurnTimer();
       const seat = game.turn;
       const p = policyFor(mode.ai);
       let mv = null;
@@ -2719,28 +3601,36 @@
   function applySeatMove(seat, mv) {
     busy = true;
     const srcRect = handRect(seat);
-    if (mv === null || mv === undefined) {
-      if (!game.pass(seat)) {
-        const ms = game.legalMoves(seat);
-        if (ms.length) mv = ms[0]; else { game.pass(seat); mv = null; }
-      }
-      tableCards[seat] = 'pass';
-    }
+    let playedIds = null;
+
     if (mv) {
-      const played = D.countsToIds(game.ids[seat], mv);
+      playedIds = D.countsToIds(game.ids[seat], mv);
       if (!game.play(seat, mv)) {
         const ms = game.legalMoves(seat);
         if (ms.length) {
           const m2 = ms[0];
-          const p2 = D.countsToIds(game.ids[seat], m2);
+          playedIds = D.countsToIds(game.ids[seat], m2);
           game.play(seat, m2);
-          tableCards[seat] = p2;
-        } else { game.pass(seat); tableCards[seat] = 'pass'; }
-      } else {
-        tableCards[seat] = played;
+        } else if (game.pass(seat)) {
+          playedIds = 'pass';
+        } else {
+          playedIds = null;
+        }
       }
+    } else if (!game.pass(seat)) {
+      const ms = game.legalMoves(seat);
+      if (ms.length) {
+        const m2 = ms[0];
+        playedIds = D.countsToIds(game.ids[seat], m2);
+        game.play(seat, m2);
+      } else {
+        playedIds = null;
+      }
+    } else {
+      playedIds = 'pass';
     }
-    const playedIds = tableCards[seat];
+
+    markTable(seat, playedIds);
     const isPass = playedIds === 'pass';
 
     if (isPass) {
@@ -2784,6 +3674,7 @@
   function humanPlay() {
     if (game.turn !== HUMAN || busy) return;
     if (!selected.size) return;
+    stopTurnTimer();
     const m = selectedMove();
     const last = game.lastSeat === HUMAN ? null : game.lastMove;
     const a = D.analyze(m);
@@ -2806,7 +3697,7 @@
     }
     const played = D.countsToIds(game.ids[HUMAN], m);
     if (!game.play(HUMAN, m)) { toast('出牌失败，请重试'); return; }
-    tableCards[HUMAN] = played;
+    markTable(HUMAN, played);
     selected.clear();
     hintIdx = 0;
     const line = moveVoice(m);
@@ -2830,8 +3721,9 @@
   function humanPass() {
     if (game.turn !== HUMAN || busy) return;
     if (!game.canPass()) { toast('你是本轮首出，必须出牌'); return; }
+    stopTurnTimer();
     game.pass(HUMAN);
-    tableCards[HUMAN] = 'pass';
+    markTable(HUMAN, 'pass');
     selected.clear();
     sfx('pass');
     setMood(el('tbAv'), 'think', 900);
@@ -2840,16 +3732,46 @@
     scheduleStep(520);
   }
 
+  /* 提示：按「能走完 > 不拆结构 > 一次多走牌 > 出小牌」排序。
+     旧版只按“张数少 + 点数小”给，等于每按一次都在教你拆顺子、拆飞机。 */
   function humanHint() {
     if (game.turn !== HUMAN) return;
     const ms = game.legalMoves(HUMAN);
     if (!ms.length) { toast('没有能压过的牌，只能不出'); return; }
-    lastLegal = ms.slice().sort((x, y) => {
-      const ax = D.analyze(x), ay = D.analyze(y);
-      if (ax.n !== ay.n) return ax.n - ay.n;
-      return ax.r - ay.r;
-    });
-    if (hintIdx >= lastLegal.length) { hintIdx = 0; toast('已循环到最小一手'); }
+    const hand = game.hands[HUMAN];
+    const before = D.handCount(hand);
+    const mySize = D.total(hand);
+
+    const rank = function (m) {
+      const a = D.analyze(m);
+      const after = hand.slice();
+      for (let r = 3; r <= 17; r++) after[r] -= m[r];
+      const hc = D.handCount(after);
+      let s = 0;
+      if (D.total(m) === mySize) s -= 1000;            /* 能一把走完 */
+      if (a.t === D.T.BOMB) s += 300;                  /* 炸弹留到最后 */
+      if (a.t === D.T.ROCKET) s += 400;
+      s += Math.max(0, hc - (before - 1)) * 120;       /* 拆结构重罚 */
+      s -= D.total(m) * 4;                             /* 一次多走牌 */
+      s += a.r * 0.3;                                  /* 同等结构出小牌 */
+      return s;
+    };
+
+    const scored = ms.map(function (m) { return { m: m, s: rank(m) }; });
+    scored.sort(function (x, y) { return x.s - y.s; });
+
+    /* 去掉「同牌型同主牌」的重复项，让每次点击都能看到不一样的选择 */
+    const seen = {};
+    lastLegal = [];
+    for (const it of scored) {
+      const a = D.analyze(it.m);
+      const key = a.t + ':' + a.r + ':' + a.n;
+      if (seen[key]) continue;
+      seen[key] = 1;
+      lastLegal.push(it.m);
+    }
+
+    if (hintIdx >= lastLegal.length) { hintIdx = 0; toast('已循环一轮，回到最优一手'); }
     const m = lastLegal[hintIdx++];
     selected.clear();
     const ids = D.countsToIds(game.ids[HUMAN], m);
@@ -2862,32 +3784,64 @@
   function finish() {
     roundOver = true;
     busy = false;
+    stopTurnTimer();
+    clearTimeout(autoTimer);
     render();
 
     const L = game.landlord;
     const landlordWon = game.winner === L;
     const iAmLandlord = HUMAN === L;
     const iWon = iAmLandlord === landlordWon;
+    const isPuzzle = !!(mode && mode.puzzle);
+    if (isPuzzle) game.puzzleWon = iWon;
 
+    /* 倍数：炸弹/春天 × 我的加倍 × 我的明牌（各家只对自己那份负责） */
+    const myDouble = (game.doubles && game.doubles[HUMAN]) || 1;
+    const myReveal = !!(game.reveal && game.reveal[HUMAN]);
+    const mulAll = game.multiplier * myDouble * (myReveal ? 2 : 1);
     const share = iAmLandlord ? 2 : 1;
-    const stake = mode.base * game.base * game.multiplier;
-    let delta = stake * share * (iWon ? 1 : -1);
-    if (!mode.coin) delta = 0;
+    const stake = (mode.base || 0) * game.base * mulAll;
+    let delta = Math.round(stake * share * (iWon ? 1 : -1));
+    if (!mode.coin || isPuzzle) delta = 0;
 
     const extras = [];
+    let coinApplied = false, firstClear = false;
+    if (isPuzzle && iWon && user) {
+      ensureProfile(user);
+      user.puzzle = user.puzzle || {};
+      if (!user.puzzle[curPuzzle.id]) {
+        firstClear = true;
+        const rew = curPuzzle.reward || 300;
+        user.puzzle[curPuzzle.id] = Date.now();
+        user.coins += rew;
+        delta = rew;
+        coinApplied = true;
+        extras.push('首通奖励 +' + rew + ' 金币');
+      } else {
+        extras.push('已通关过，这次不计奖励');
+      }
+    }
+
     if (user) {
       ensureProfile(user);
-      if (delta > 0 && user.buff.doubleUntil > Date.now()) {
-        delta *= 2;
-        extras.push('翻倍卡 ×2');
-      }
-      if (delta < 0 && user.buff.shield > 0) {
-        user.buff.shield--;
-        delta = Math.ceil(delta / 2);
-        extras.push('护身符减半');
+      if (!isPuzzle) {
+        if (delta > 0 && user.buff.doubleUntil > Date.now()) {
+          delta *= 2;
+          extras.push('翻倍卡 ×2');
+        }
+        if (delta > 0 && user.buff.lucky > 0) {
+          user.buff.lucky--;
+          delta = Math.round(delta * 1.3);
+          extras.push('幸运符 +30%');
+        }
+        if (delta < 0 && user.buff.shield > 0) {
+          user.buff.shield--;
+          delta = Math.ceil(delta / 2);
+          extras.push('护身符减半');
+        }
       }
       const lvBefore = levelOf(user.exp);
-      user.exp = (user.exp || 0) + 30 + (iWon ? 25 : 0);
+      user.exp = (user.exp || 0) + (isPuzzle ? 12 : 30 + (iWon ? 25 : 0));
       const lvAfter = levelOf(user.exp);
       if (lvAfter > lvBefore) {
         const bonus = 200 * lvAfter;
@@ -2899,30 +3853,59 @@
     let broke = false;
     if (user) {
       user.stats = user.stats || { games: 0, wins: 0, best: 0 };
-      user.stats.games++;
-      if (iWon) user.stats.wins++;
-      if (delta !== 0) {
+      if (!isPuzzle) {
+        user.stats.games++;
+        if (iWon) user.stats.wins++;
+      }
+      if (delta !== 0 && !coinApplied) {
         const after = user.coins + delta;
         if (after < 0) { delta = -user.coins; broke = true; }   /* 赔不起就按剩余金币结算 */
         user.coins = Math.max(0, user.coins + delta);
-        if (user.coins > (user.stats.best || 0)) user.stats.best = user.coins;
       }
+      if (user.coins > (user.stats.best || 0)) user.stats.best = user.coins;
+
+      recordHistory({
+        t: Date.now(),
+        mode: isPuzzle ? '残局' : mode.name,
+        name: isPuzzle ? curPuzzle.name : mode.name,
+        role: iAmLandlord ? '地主' : '农民',
+        win: iWon,
+        mul: mulAll,
+        base: (mode.base || 0) * game.base,
+        delta: delta,
+        bomb: game.bombCount || 0,
+        spring: !!game.spring,
+        moves: game.moveCount[HUMAN] || 0,
+        puzzle: isPuzzle ? curPuzzle.id : ''
+      });
       saveUser();
     }
     refreshCoins();
 
-    if (iWon) { setMood(el('tbAv'), 'happy'); el('thMood').textContent = '赢麻了'; }
-    else { setMood(el('tbAv'), 'sad'); el('thMood').textContent = '下次赢回来'; }
+    if (iWon) { setMood(el('tbAv'), 'happy'); el('thMood').textContent = isPuzzle ? '漂亮' : '赢麻了'; }
+    else { setMood(el('tbAv'), 'sad'); el('thMood').textContent = isPuzzle ? '再来一次' : '下次赢回来'; }
     if (iWon) npcSay(Math.random() < 0.5 ? 1 : 2, 'lose');
     else npcSay(game.winner === HUMAN ? 1 : game.winner, 'win');
 
-    el('ovTitle').textContent = iWon ? '你赢了' : '你输了';
+    if (isPuzzle) {
+      el('ovTitle').textContent = iWon ? '闯关成功' : '闯关失败';
+    } else {
+      el('ovTitle').textContent = iWon ? '你赢了' : '你输了';
+    }
     const bits = [];
-    bits.push(landlordWon ? '地主获胜' : '农民获胜');
-    if (game.spring) bits.push((landlordWon ? '春天' : '反春天') + ' ×2');
-    if (game.bombCount > 0) bits.push('炸弹 ' + game.bombCount + ' 次');
-    if (mode.coin) {
-      bits.push('底分 ' + mode.base + ' × 叫分 ' + game.base + ' × 倍数 ' + game.multiplier + ' × ' + share + ' 份');
+    if (isPuzzle) {
+      bits.push('残局 · ' + curPuzzle.name);
+      bits.push(iAmLandlord ? '你坐地主' : '你坐农民');
+      bits.push('用了 ' + (game.moveCount[HUMAN] || 0) + ' 手');
+    } else {
+      bits.push(landlordWon ? '地主获胜' : '农民获胜');
+      if (game.spring) bits.push((landlordWon ? '春天' : '反春天') + ' ×2');
+      if (game.bombCount > 0) bits.push('炸弹 ' + game.bombCount + ' 次');
+      if (myDouble > 1) bits.push((iAmLandlord ? '地主' : '农民') + (myDouble >= 4 ? '超级加倍 ×4' : '加倍 ×2'));
+      if (myReveal) bits.push('明牌 ×2');
+      if (mode.coin) {
+        bits.push('底分 ' + mode.base + ' × 叫分 ' + game.base + ' × 倍数 ' + mulAll + ' × ' + share + ' 份');
+      }
     }
     if (broke) bits.push('金币不足，已按剩余金币结算');
     for (const x of extras) bits.push(x);
@@ -2938,12 +3921,18 @@
       dEl.innerHTML = fmtSigned(delta) + '<span class="u">金币</span>';
       el('ovBal').textContent = '余额 ' + fmt(user.coins) + ' 金币';
     }
+    el('ovAgain').textContent = isPuzzle ? (iWon ? '下一关' : '再试一次') : '再来一局';
+    el('ovClose').textContent = isPuzzle ? '回大厅' : '回大厅';
     overlay.classList.add('show');
   }
 
   /* ================= 开局 ================= */
+  let bidRotation = 0;        /* 首叫座位轮转，避免玩家永远先叫 */
   function startRound() {
     overlay.classList.remove('show');
+    closeDoubleOverlay();
+    stopTurnTimer();
+    clearTimeout(autoTimer);
     roundOver = false;
     busy = false;
     selected.clear();
@@ -2957,10 +3946,23 @@
     el('bid2').textContent = '';
     el('chatPanel').classList.remove('show');
     paintTableHero('idle', '准备中');
-    game = new D.Game();
-    tipEl.innerHTML = '叫分抢地主，最高分者当地主';
+
+    const pz = (mode && mode.puzzle && curPuzzle) ? curPuzzle : null;
+    if (pz) {
+      game = buildPuzzleGame(pz);
+      el('bottomCards').classList.add('pz');
+      render();
+      tipEl.innerHTML = pz.tip || '残局开始，赢下这一局';
+      beginDoubleStage();
+      return;
+    }
+    el('bottomCards').classList.remove('pz');
+    game = new D.Game({ firstBid: bidRotation++ % 3 });
+    tipEl.innerHTML = game.bidTurn === HUMAN
+      ? '你先叫分，最高分者当地主'
+      : '电脑 ' + (game.bidTurn === 1 ? 'A' : 'B') + ' 先叫分，最高分者当地主';
     render();
-    if (game.bidTurn === HUMAN) return;
+    if (game.bidTurn === HUMAN) { beginHumanBidTurn(); return; }
     scheduleStep(800);
   }
 
@@ -3288,6 +4290,14 @@
       '<div style="font-size:12.5px;color:#ffe3c8;line-height:1.7;margin-bottom:16px">' +
         esc(user.nickname) + '<br><span style="color:#d9ab94;font-size:11.5px">' + esc(user.email) + ' · ID ' + user.id + '</span>' +
       '</div>' +
+      '<div class="field" style="margin-bottom:6px">出牌倒计时</div>' +
+      '<div class="seg" style="margin-bottom:12px">' +
+        [15, 20, 30].map(v => '<button type="button" data-cd="' + v + '"' +
+          ((OPTS.cd || 20) === v ? ' class="on"' : '') + '>' + v + ' 秒</button>').join('') +
+      '</div>' +
+      '<div style="font-size:10.5px;color:#b98a76;line-height:1.6;margin-bottom:14px">' +
+        '超时叫分自动不叫，出牌阶段自动不出（首出则出最小一手）。托管在牌桌顶部的 🤖 按钮里开关。' +
+      '</div>' +
       '<div class="row-btns"><button class="btn ghost" id="stLogout" type="button">退出登录</button></div>' +
       '<div class="row-btns"><button class="btn ghost" id="stExp" type="button">备份账号</button>' +
       '<button class="btn ghost" id="stImp" type="button">恢复账号</button></div>' +
@@ -3299,6 +4309,13 @@
         '本游戏纯本地运行：账号、密码哈希、金币都存在这台机器的浏览器里，清空后无法恢复。换浏览器、换电脑、清缓存前先用「备份账号」存一份。' +
       '</div>'
     );
+    drawerBody.querySelectorAll('[data-cd]').forEach(b => {
+      b.onclick = () => {
+        OPTS.cd = +b.dataset.cd; saveOpts();
+        drawerBody.querySelectorAll('[data-cd]').forEach(x => x.classList.toggle('on', x === b));
+        toast('倒计时已设为 ' + OPTS.cd + ' 秒');
+      };
+    });
     el('stLogout').onclick = () => {
       localStorage.removeItem(K_SESSION);
       user = null;
@@ -3321,7 +4338,7 @@
 
   /* ---- 账号备份 / 恢复：跨浏览器、跨机器、在预览窗口里也能把数据带出去 ---- */
   const BK_FIELDS = ['id', 'nickname', 'email', 'avatar', 'salt', 'algo', 'hash', 'coins', 'exp',
-    'look', 'owned', 'bag', 'buff', 'stats', 'sign', 'createdAt', 'lastLogin'];
+    'look', 'owned', 'bag', 'buff', 'stats', 'sign', 'history', 'puzzle', 'createdAt', 'lastLogin'];
 
   function backupCode(u) {
     const o = {};
@@ -3431,6 +4448,12 @@
         const bag = Object.assign({}, old.bag || {});
         for (const k in (o.bag || {})) bag[k] = Math.max(bag[k] || 0, o.bag[k] || 0);
         o.bag = bag;
+        o.history = mergeHistory((old.history || []).concat(o.history || []));
+        const pz = Object.assign({}, old.puzzle || {});
+        for (const k in (o.puzzle || {})) {
+          pz[k] = Math.max(pz[k] || 0, o.puzzle[k] || 0);
+        }
+        o.puzzle = pz;
       }
       users[o.id] = o;
       user = o;
@@ -3595,10 +4618,18 @@
   el('hubLevel').onclick = openLevel;
   el('hubShop').onclick = () => openShop('skin');
   el('hubRank').onclick = openRank;
-  el('hubStat').onclick = openProfile;
+  el('hubStat').onclick = openHistory;
+  el('hubPuzzle').onclick = openPuzzles;
   el('hubGear').onclick = openGear;
   el('btnChat').onclick = () => el('chatPanel').classList.toggle('show');
   buildChat();
+
+  el('btnCounter').onclick = () => toggleCounter();
+  el('btnTuto').onclick = () => setTuto(!tutoOn);
+  el('btnBgm').onclick = toggleBgm;
+  paintCounterBtn();
+  paintTuto();
+  paintBgmBtn();
 
   const NPC_LOOKS = {
     1: { sex: 'm', body: 'stout', skin: 2, hair: 2, hairColor: 0, outfit: 'suit' },
@@ -3610,9 +4641,24 @@
       if (f) f.innerHTML = avatarSvg(NPC_LOOKS[k], 'idle');
     }
   })();
+  /* 中途离桌收一次象征性桌费：否则“回大厅 → 重新进场”就成了免费刷手牌 */
+  function chargeTableFee() {
+    if (!mode || !mode.coin || !game || game.phase === 'over' || roundOver) return 0;
+    const fee = Math.max(0, Math.min(user.coins, mode.base * 2));
+    if (fee > 0) { user.coins -= fee; saveUser(); refreshCoins(); }
+    return fee;
+  }
   el('btnBack').onclick = () => {
-    if (game && !roundOver && game.phase === 'play') {
-      if (!window.confirm('这局还没打完，确定回大厅？本局不算战绩。')) return;
+    closeDoubleOverlay();
+    stopTurnTimer();
+    clearTimeout(autoTimer);
+    if (game && !roundOver && game.phase !== 'over') {
+      const fee = mode && mode.coin ? mode.base * 2 : 0;
+      const tip = fee > 0
+        ? '这局还没打完，现在离开会收 ' + fee + ' 金币桌费（防止刷手牌），确定？'
+        : '这局还没打完，确定回大厅？';
+      if (!window.confirm(tip)) return;
+      chargeTableFee();
     }
     roundOver = true;
     showScreen('lobby');
@@ -3635,20 +4681,58 @@
       toast(voiceOn ? '语音已打开' : '语音已关闭');
     };
   }
-  el('btnNew').onclick = () => { if (!roundOver) startRound(); };
+  /* 认输：不再提供“免费重发牌”，否则玩家可以一直重开到双王四个 2 再打 */
+  el('btnNew').onclick = () => {
+    if (!game || roundOver) return;
+    closeDoubleOverlay();
+    stopTurnTimer();
+    clearTimeout(autoTimer);
+    if (game.phase === 'play') {
+      if (!window.confirm('认输将按本局失败结算，确定吗？')) return;
+      game.resigned = true;
+      game.winner = game.landlord === HUMAN ? (HUMAN + 1) % 3 : game.landlord;
+      game.phase = 'over';
+      game._settle();
+      finish();
+      return;
+    }
+    if (game.phase === 'bid') {
+      const fee = mode && mode.coin ? mode.base * 2 : 0;
+      if (!window.confirm(fee > 0
+        ? '还没叫地主，退出本局会收 ' + fee + ' 金币桌费，确定？'
+        : '还没叫地主，确定退出本局？')) return;
+      chargeTableFee();
+      roundOver = true;
+      showScreen('lobby');
+      paintLobby();
+    }
+  };
   el('ovAgain').onclick = () => {
+    if (mode && mode.puzzle) {
+      const idx = Math.max(0, PUZZLES.indexOf(curPuzzle));
+      if (game && game.puzzleWon && idx >= PUZZLES.length - 1) {
+        toast('全部残局已通关，厉害');
+        overlay.classList.remove('show');
+        curPuzzle = null;
+        showScreen('lobby'); paintLobby();
+        return;
+      }
+      startPuzzle(game && game.puzzleWon ? idx + 1 : idx);
+      return;
+    }
     if (mode.coin && mode.ante > 0 && user.coins < mode.ante) {
-      toast('金币不足，回大厅签到吧');
+      toast('需携带 ' + fmt(mode.ante) + ' 金币才能继续' + mode.name);
       overlay.classList.remove('show');
       showScreen('lobby');
       paintLobby();
       return;
     }
-    if (mode.coin && mode.ante > 0) { user.coins -= mode.ante; saveUser(); }
     startRound();
   };
   el('ovClose').onclick = () => {
     overlay.classList.remove('show');
+    closeDoubleOverlay();
+    curPuzzle = null;
     showScreen('lobby');
     paintLobby();
   };
@@ -3934,6 +5018,7 @@
     get users() { return users; },
     enterMode: enterMode,
     startRound: startRound,
+    render: render,
     say: say,
     setSeatMood: setSeatMood,
     checkLowCards: checkLowCards,

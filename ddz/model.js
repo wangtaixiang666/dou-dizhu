@@ -369,6 +369,34 @@
     };
   };
 
+  /* ------------------------------------------------------------------
+     大师场：防守局面交给规则解，其余交给「模型 + 启发式」集合作战。
+     1 步价值的网络在“对手只剩 1 张”这类硬约束上会算错，规则兜底更稳。
+     ------------------------------------------------------------------ */
+  DDZ.makeGrandPolicy = function (net, opts) {
+    opts = opts || {};
+    const ens = DDZ.makeEnsemblePolicy(net, { name: 'grand', passMargin: 0.20, prior: 0.05 });
+    const H = DDZ.HeuristicBot;
+    return {
+      name: 'grand',
+      chooseBid: function (g, s) { return H.chooseBid(g, s); },
+      chooseMove: function (g, s) {
+        const L = g.landlord;
+        let minOpp = 99, mateLeft = 99;
+        for (let i = 0; i < 3; i++) {
+          if (i === s) continue;
+          const n = DDZ.total(g.hands[i]);
+          const mate = s !== L && i !== L;
+          if (mate) { if (n < mateLeft) mateLeft = n; }
+          else if (n < minOpp) minOpp = n;
+        }
+        /* 关键防守 / 配合局面：直接用规则解，不允许网络“觉得还有机会” */
+        if (minOpp <= 1 || mateLeft <= 2) return H.chooseMove(g, s);
+        return ens.chooseMove(g, s);
+      }
+    };
+  };
+
   /* 随机策略（评测下限基准） */
   DDZ.makeRandomPolicy = function () {
     return {
