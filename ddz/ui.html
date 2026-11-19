@@ -211,6 +211,17 @@
     font-size:10.5px;color:#e9bfa0;letter-spacing:.6px;opacity:.92;
   }
   .a-tags i{width:3px;height:3px;border-radius:50%;background:rgba(247,201,92,.62)}
+  /* 下载入口：让别人把这个单文件存到自己电脑上玩 */
+  .dl-pill{
+    display:inline-flex;align-items:center;gap:6px;align-self:center;
+    margin-top:-2px;padding:7px 15px;border-radius:999px;
+    border:1px solid rgba(255,206,132,.4);background:rgba(255,206,132,.09);
+    color:#ffdca2;font-size:12px;letter-spacing:.4px;text-decoration:none;
+    transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease;
+  }
+  .dl-pill:hover{background:rgba(255,206,132,.2);border-color:rgba(255,206,132,.72);color:#fff3d8;transform:translateY(-1px)}
+  .dl-pill svg{width:13px;height:13px;flex:none;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .dl-pill b{font-weight:700;color:#ffe8b6}
   @media (max-width:1080px){
     .a-fig{width:224px;height:318px;bottom:62px}
     .a-fig .fig{width:186px;height:279px}
@@ -1238,6 +1249,12 @@
       <div class="a-tags">
         <span>无需联网</span><i></i><span>模型 AI 坐镇</span><i></i><span>签到领金币</span>
       </div>
+
+      <a class="dl-pill" id="dlGame" href="%E6%96%97%E5%9C%B0%E4%B8%BB.html" download="斗地主.html"
+         title="把这个单文件存到自己电脑上，双击即可玩，不联网">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M7.5 11.5 12 16l4.5-4.5"/><path d="M4.5 20h15"/></svg>
+        <span>下载到电脑 <b>·</b> 单文件离线玩</span>
+      </a>
     </div>
   </section>
 
