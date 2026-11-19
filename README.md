@@ -9,6 +9,15 @@
 
 仓库开启 GitHub Pages 后，直接访问站点首页即可（自动跳转到斗地主）。
 
+## 下载
+
+想把游戏存到自己电脑上离线玩，两条路都行：
+
+1. 到 [Releases](https://github.com/wangtaixiang666/dou-dizhu/releases/latest) 下载 `doudizhu.html`（斗地主）或 `2048-stones.html`，**不需要登录 GitHub**；
+2. 在线页面登录卡下方点「**下载到电脑**」，浏览器会直接存一份 `斗地主.html`。
+
+下载后双击用浏览器打开即可，不联网、不安装、无依赖。
+
 ## 本地运行
 
 直接双击 `斗地主.html` 或 `2048-stones.html`，用浏览器打开即可。
