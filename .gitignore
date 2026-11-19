@@ -1,0 +1,14 @@
+# 工具/会话数据，不纳入版本管理
+.workbuddy/
+
+# 临时调试产物
+ddz/_*.html
+ddz/_*.js
+ddz/shots/
+_preview.html
+
+# 系统与依赖
+node_modules/
+.DS_Store
+Thumbs.db
+desktop.ini

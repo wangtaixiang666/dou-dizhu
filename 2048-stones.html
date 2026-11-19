@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>2048 · 石块与翻倍</title>
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(1200px 600px at 12% -10%, #fffdf8 0%, rgba(255,253,248,0) 60%),
+      linear-gradient(170deg,#f8f3e9 0%, #f0e8da 100%);
+    color:#3a3229;
+    font-family:"Helvetica Neue",Inter,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+    display:flex; align-items:flex-start; justify-content:center;
+    padding:28px 16px 56px;
+  }
+  .wrap{width:100%;max-width:480px}
+
+  /* ---------- header ---------- */
+  .head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:16px}
+  .brand h1{
+    margin:0;font-size:40px;line-height:1;letter-spacing:-1.5px;font-weight:800;
+    background:linear-gradient(150deg,#5a4b38,#8d6f42);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .brand p{margin:6px 0 0;font-size:12.5px;color:#92836d;letter-spacing:.4px}
+  .scores{display:flex;gap:8px}
+  .sbox{
+    min-width:82px;padding:7px 11px 8px;border-radius:11px;
+    background:linear-gradient(165deg,#4d4438,#382f26);
+    box-shadow:0 6px 16px -8px rgba(60,45,30,.75), inset 0 1px 0 rgba(255,255,255,.13);
+    text-align:center;color:#fff
+  }
+  .sbox span{display:block;font-size:10px;letter-spacing:1.4px;color:#d9c9b0;text-transform:uppercase}
+  .sbox strong{display:block;font-size:20px;font-weight:800;line-height:1.25;font-variant-numeric:tabular-nums;transition:transform .12s}
+  .sbox.bump strong{transform:scale(1.16)}
+
+  /* ---------- controls ---------- */
+  .bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  .seg{display:flex;background:rgba(255,255,255,.62);border-radius:11px;padding:3px;gap:2px;box-shadow:inset 0 0 0 1px rgba(120,100,75,.13)}
+  .seg button{
+    border:0;background:transparent;padding:7px 13px;border-radius:9px;
+    font:inherit;font-size:13px;font-weight:600;color:#8d7d67;cursor:pointer;transition:.16s
+  }
+  .seg button:hover{color:#5c4f3d}
+  .seg button.on{background:linear-gradient(165deg,#57493a,#3c3227);color:#fff;box-shadow:0 4px 10px -5px rgba(60,45,30,.85)}
+  .spacer{flex:1}
+  .btn{
+    border:0;font:inherit;font-size:13px;font-weight:700;padding:9px 15px;border-radius:11px;
+    cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:6px
+  }
+  .btn.primary{background:linear-gradient(165deg,#e9a15c,#d98336);color:#fff;box-shadow:0 6px 16px -8px rgba(200,120,40,.95)}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .btn.ghost{background:rgba(255,255,255,.72);color:#6f6250;box-shadow:inset 0 0 0 1px rgba(120,100,75,.16)}
+  .btn.ghost:hover{background:#fff;color:#4d4234}
+  .btn:disabled{opacity:.42;cursor:not-allowed;filter:none}
+  .btn .cnt{font-size:11px;opacity:.8;font-variant-numeric:tabular-nums}
+
+  /* ---------- board ---------- */
+  #board{
+    position:relative;width:100%;aspect-ratio:1/1;
+    background:linear-gradient(160deg,#c9bcab 0%,#b4a695 65%,#ab9c8a 100%);
+    border-radius:18px;
+    box-shadow:0 22px 46px -22px rgba(86,64,42,.62), 0 2px 0 rgba(255,255,255,.4) inset, 0 -2px 8px rgba(90,70,50,.18) inset;
+    touch-action:none;user-select:none;-webkit-user-select:none;
+    overflow:hidden;
+  }
+  #grid{
+    position:absolute;inset:var(--pad);
+    display:grid;gap:var(--gapc);
+    grid-template-columns:repeat(4,1fr);
+    grid-template-rows:repeat(4,1fr);
+  }
+  .cell{background:rgba(255,255,255,.17);border-radius:11px;box-shadow:inset 0 1px 2px rgba(90,70,50,.07)}
+  #tiles{position:absolute;inset:var(--pad);pointer-events:none}
+  #tiles.noanim .tile,#tiles.noanim .stone{transition:none !important}
+
+  .tile{
+    position:absolute;left:0;top:0;width:var(--cell);height:var(--cell);
+    border-radius:11px;display:flex;align-items:center;justify-content:center;
+    font-weight:800;letter-spacing:-.5px;font-variant-numeric:tabular-nums;
+    transition:transform .105s cubic-bezier(.3,.75,.4,1);
+    will-change:transform;transform:translate(0,0);transform-origin:center;
+    box-shadow:0 2px 0 rgba(255,255,255,.45) inset, 0 3px 8px -4px rgba(90,70,50,.4);
+  }
+  .tile[data-v="2"]{background:linear-gradient(165deg,#f2eae1,#e7dbcd);color:#7a6a56}
+  .tile[data-v="4"]{background:linear-gradient(165deg,#efe2cb,#e3d2b3);color:#7a6a56}
+  .tile[data-v="8"]{background:linear-gradient(165deg,#f3b57f,#e99b5b);color:#fff;text-shadow:0 1px 1px rgba(150,80,20,.25)}
+  .tile[data-v="16"]{background:linear-gradient(165deg,#f59a6b,#e9764a);color:#fff;text-shadow:0 1px 1px rgba(150,60,20,.25)}
+  .tile[data-v="32"]{background:linear-gradient(165deg,#f57f63,#e0563a);color:#fff;text-shadow:0 1px 1px rgba(140,40,20,.28)}
+  .tile[data-v="64"]{background:linear-gradient(165deg,#f0613f,#cd3f22);color:#fff;box-shadow:0 2px 0 rgba(255,255,255,.28) inset,0 6px 16px -8px rgba(190,60,30,.9)}
+  .tile[data-v="128"]{background:linear-gradient(165deg,#f0d47f,#e2ba45);color:#fff;text-shadow:0 1px 1px rgba(140,100,20,.3);box-shadow:0 2px 0 rgba(255,255,255,.4) inset,0 8px 20px -10px rgba(210,170,40,.95)}
+  .tile[data-v="256"]{background:linear-gradient(165deg,#f2ce6b,#dfb12c);color:#fff;text-shadow:0 1px 1px rgba(140,100,20,.3);box-shadow:0 2px 0 rgba(255,255,255,.42) inset,0 8px 22px -10px rgba(210,170,40,1)}
+  .tile[data-v="512"]{background:linear-gradient(165deg,#f4c95a,#dca417);color:#fff;text-shadow:0 1px 1px rgba(140,100,20,.32);box-shadow:0 2px 0 rgba(255,255,255,.45) inset,0 10px 24px -10px rgba(215,165,20,1)}
+  .tile[data-v="1024"]{background:linear-gradient(165deg,#f6c33f,#d29300);color:#fff;text-shadow:0 1px 1px rgba(130,90,10,.35);box-shadow:0 2px 0 rgba(255,255,255,.5) inset,0 10px 26px -10px rgba(220,160,10,1)}
+  .tile[data-v="2048"]{
+    background:linear-gradient(165deg,#ffd94a,#e8a800);color:#fff;
+    text-shadow:0 1px 2px rgba(150,100,10,.4);
+    box-shadow:0 0 0 2px rgba(255,255,255,.55) inset, 0 0 26px rgba(255,196,40,.85), 0 10px 28px -10px rgba(220,160,10,1);
+  }
+  .tile.big{background:linear-gradient(165deg,#4b463d,#2c2924);color:#f7efe2;box-shadow:0 0 0 1px rgba(255,255,255,.14) inset,0 10px 26px -12px rgba(0,0,0,.7)}
+
+  .tile.spawn{animation:pop .17s cubic-bezier(.2,1.5,.5,1) both}
+  @keyframes pop{0%{scale:.5;opacity:.2}60%{opacity:1}100%{scale:1;opacity:1}}
+  .tile.dying{transition:transform .105s ease-out, opacity .1s, filter .1s;opacity:.65;filter:brightness(1.25)}
+
+  /* boost badge */
+  .boost{
+    position:absolute;top:-5px;right:-5px;
+    min-width:26px;padding:2px 4px 3px;border-radius:9px;
+    background:linear-gradient(160deg,#ff8a3d,#e8541f);
+    color:#fff;font-size:10px;font-weight:800;line-height:1.05;
+    display:flex;flex-direction:column;align-items:center;gap:0;
+    box-shadow:0 0 0 1.5px rgba(255,255,255,.85), 0 4px 10px -3px rgba(220,80,20,.9);
+    letter-spacing:0;z-index:2;
+  }
+  .boost b{font-size:11px;font-weight:800}
+  .boost i{font-size:8.5px;font-style:normal;opacity:.92;font-weight:700}
+
+  /* stone */
+  .stone{
+    position:absolute;left:0;top:0;width:var(--cell);height:var(--cell);
+    border-radius:11px;
+    background:
+      radial-gradient(circle at 30% 22%, rgba(255,255,255,.2), rgba(255,255,255,0) 55%),
+      repeating-linear-gradient(128deg, rgba(255,255,255,.045) 0 2px, rgba(0,0,0,0) 2px 6px),
+      linear-gradient(160deg,#6b6660,#423d38 70%,#35312c);
+    box-shadow:0 0 0 1px rgba(255,255,255,.1) inset, 0 -8px 16px rgba(0,0,0,.4) inset, 0 6px 14px -8px rgba(0,0,0,.7);
+    transition:transform .105s cubic-bezier(.3,.75,.4,1);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .stone.hit{animation:shake .22s ease-in-out}
+  @keyframes shake{0%,100%{rotate:0deg}25%{rotate:-4deg}75%{rotate:4deg}}
+  .stone.flash{animation:flashOut .15s ease-in forwards}
+  @keyframes flashOut{to{opacity:0;scale:.7}}
+  .pips{display:flex;gap:4px}
+  .pip{width:6px;height:6px;border-radius:50%;background:#f6b562;box-shadow:0 0 6px rgba(246,181,98,.9)}
+  .pip.gone{background:rgba(255,255,255,.14);box-shadow:none}
+
+  /* ---------- meta ---------- */
+  .meta{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:12px;color:#8a7a64;gap:10px;flex-wrap:wrap}
+  .meta b{color:#5c4c39;font-variant-numeric:tabular-nums}
+  .legend{display:flex;gap:14px;flex-wrap:wrap}
+  .legend i{display:inline-flex;align-items:center;gap:6px;font-style:normal}
+  .sw{width:14px;height:14px;border-radius:4px;display:inline-block;flex:0 0 auto}
+  .sw.sw-stone{background:linear-gradient(160deg,#6b6660,#3b3733);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}
+  .sw.sw-boost{background:linear-gradient(160deg,#ff8a3d,#e8541f);border-radius:5px}
+
+  details.rules{
+    margin-top:14px;background:rgba(255,255,255,.6);border-radius:13px;
+    box-shadow:inset 0 0 0 1px rgba(120,100,75,.13);
+    font-size:12.5px;color:#6d6050;line-height:1.85;
+  }
+  details.rules summary{cursor:pointer;padding:11px 15px;font-weight:700;color:#5a4c3b;font-size:13px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  details.rules summary::-webkit-details-marker{display:none}
+  details.rules summary::after{content:"+";font-weight:700;color:#9b8b74;font-size:15px}
+  details.rules[open] summary::after{content:"−"}
+  details.rules .body{padding:0 15px 14px;border-top:1px solid rgba(120,100,75,.1);margin-top:-2px;padding-top:10px}
+  details.rules ul{margin:0;padding-left:17px}
+  details.rules li{margin:5px 0}
+  details.rules em{font-style:normal;color:#b3652a;font-weight:700}
+
+  /* ---------- overlay ---------- */
+  .overlay{
+    position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
+    background:rgba(60,48,34,.44);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+    padding:24px;opacity:0;pointer-events:none;transition:opacity .22s
+  }
+  .overlay.show{opacity:1;pointer-events:auto}
+  .panel{
+    width:100%;max-width:330px;background:linear-gradient(170deg,#fffdf9,#f6efe4);
+    border-radius:20px;padding:26px 24px 22px;text-align:center;
+    box-shadow:0 30px 60px -24px rgba(50,35,20,.6), inset 0 1px 0 #fff;
+    transform:translateY(12px) scale(.97);transition:transform .26s cubic-bezier(.2,.9,.3,1)
+  }
+  .overlay.show .panel{transform:none}
+  .panel h2{margin:0 0 8px;font-size:25px;font-weight:800;letter-spacing:-.5px;color:#4a3d2c}
+  .panel p{margin:0 0 18px;font-size:13.5px;color:#8a7a64;line-height:1.7}
+  .panel .big{font-size:34px;font-weight:800;color:#c8792b;display:block;line-height:1.2;font-variant-numeric:tabular-nums}
+  .ovbtns{display:flex;gap:9px;justify-content:center}
+  .ovbtns .btn{flex:1;justify-content:center;padding:11px 12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <div class="brand">
+      <h1>2048</h1>
+      <p>石块与翻倍 · 本地版</p>
+    </div>
+    <div class="scores">
+      <div class="sbox" id="scoreBox"><span>分数</span><strong id="score">0</strong></div>
+      <div class="sbox" id="bestBox"><span>最高</span><strong id="best">0</strong></div>
+    </div>
+  </div>
+
+  <div class="bar">
+    <div class="seg" id="diffSeg">
+      <button data-d="casual">休闲</button>
+      <button data-d="standard">标准</button>
+      <button data-d="hard">困难</button>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn ghost" id="undoBtn">撤销 <span class="cnt" id="undoCnt">3</span></button>
+    <button class="btn primary" id="newBtn">新游戏</button>
+  </div>
+
+  <div id="board">
+    <div id="grid"></div>
+    <div id="tiles"></div>
+  </div>
+
+  <div class="meta">
+    <span>步数 <b id="moves">0</b> · 石块 <b id="stoneCnt">0/3</b></span>
+    <div class="legend">
+      <i><span class="sw sw-stone"></span>石块</i>
+      <i><span class="sw sw-boost"></span>翻倍格</i>
+    </div>
+  </div>
+
+  <details class="rules">
+    <summary>规则与机制说明</summary>
+    <div class="body">
+      <ul>
+        <li>方向键 / WASD 移动，手机上直接在棋盘上滑动。</li>
+        <li>相同数字相撞合并，每次有效移动后随机生成一个 2（90%）或 4（10%）。</li>
+        <li><em>石块</em>：不会移动、不会合并，堵住格子。当它的<strong>相邻格发生合并</strong>时累积 1 条裂纹，裂纹满即碎裂并 <em>+120 分</em>。</li>
+        <li><em>翻倍格（×2）</em>：带标记的方块参与合并时，结果<strong>再乘 2</strong>（2+2 → 8）；标记有存活步数，标记内的小字是剩余步数，归零后标记消失。</li>
+        <li>两个都带 ×2 的方块合并，仍然只乘一次（不叠乘 4 倍）。</li>
+        <li>达成 2048 后可选择继续无限挑战；棋盘填满且无相邻同数即结束。</li>
+      </ul>
+    </div>
+  </details>
+
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="panel">
+    <h2 id="ovTitle">标题</h2>
+    <p id="ovText">说明</p>
+    <div class="ovbtns">
+      <button class="btn primary" id="ovPrimary">继续</button>
+      <button class="btn ghost" id="ovSecondary">新游戏</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ========================= 配置 ========================= */
+  const DIFFS = {
+    casual:   { name:'休闲', stoneCap:1, stoneEvery:30, crackMax:3, boostP:0.22, boostLife:7, undos:99, stoneBonus:120 },
+    standard: { name:'标准', stoneCap:3, stoneEvery:12, crackMax:5, boostP:0.14, boostLife:5, undos:3,  stoneBonus:120 },
+    hard:     { name:'困难', stoneCap:5, stoneEvery:8,  crackMax:7, boostP:0.08, boostLife:3, undos:1,  stoneBonus:150 }
+  };
+  const SAVE_KEY = 'g2048.stones.save.v1';
+  const BEST_KEY = 'g2048.stones.best.v1';
+  const N = 4;
+
+  /* ========================= DOM ========================= */
+  const boardEl  = document.getElementById('board');
+  const gridEl   = document.getElementById('grid');
+  const tilesEl  = document.getElementById('tiles');
+  const scoreEl  = document.getElementById('score');
+  const bestEl   = document.getElementById('best');
+  const movesEl  = document.getElementById('moves');
+  const stoneCntEl = document.getElementById('stoneCnt');
+  const undoBtn  = document.getElementById('undoBtn');
+  const undoCntEl= document.getElementById('undoCnt');
+  const newBtn   = document.getElementById('newBtn');
+  const diffSeg  = document.getElementById('diffSeg');
+  const overlay  = document.getElementById('overlay');
+  const ovTitle  = document.getElementById('ovTitle');
+  const ovText   = document.getElementById('ovText');
+  const ovPrimary= document.getElementById('ovPrimary');
+  const ovSecondary = document.getElementById('ovSecondary');
+
+  /* ========================= 状态 ========================= */
+  let uid = 1;
+  let S = null;
+  let best = Number(localStorage.getItem(BEST_KEY) || 0) || 0;
+  let busy = false;
+  let modalOpen = false;
+  const elMap = new Map();      // tileId -> element
+  const stoneElMap = new Map(); // stoneId -> element
+  let M = { pad:11, gap:11, cell:80 };
+
+  function newState(diff) {
+    return {
+      diff: diff,
+      tiles: [],
+      stones: [],
+      score: 0,
+      moves: 0,
+      sinceStone: 0,
+      undoLeft: DIFFS[diff].undos,
+      history: [],
+      won: false,
+      wonShown: false,
+      over: false
+    };
+  }
+
+  /* ========================= 布局 ========================= */
+  function computeMetrics() {
+    const bw = boardEl.clientWidth;
+    const pad = Math.max(7, Math.round(bw * 0.0255));
+    const cell = (bw - pad * 2 - pad * (N - 1)) / N;
+    M = { pad: pad, gap: pad, cell: cell, bw: bw };
+    boardEl.style.setProperty('--pad', pad + 'px');
+    boardEl.style.setProperty('--gapc', pad + 'px');
+    boardEl.style.setProperty('--cell', cell + 'px');
+  }
+  function xy(r, c) {
+    return [c * (M.cell + M.gap), r * (M.cell + M.gap)];
+  }
+  function applyPos(el, r, c) {
+    const p = xy(r, c);
+    el.style.transform = 'translate(' + p[0] + 'px,' + p[1] + 'px)';
+  }
+  function fontSizeFor(v) {
+    const len = String(v).length;
+    const k = len <= 2 ? 0.42 : len === 3 ? 0.33 : len === 4 ? 0.255 : 0.205;
+    return Math.round(M.cell * k) + 'px';
+  }
+
+  function buildGrid() {
+    gridEl.innerHTML = '';
+    for (let i = 0; i < N * N; i++) {
+      const d = document.createElement('div');
+      d.className = 'cell';
+      gridEl.appendChild(d);
+    }
+  }
+
+  /* ========================= 占用表 ========================= */
+  function occupancy() {
+    const g = [];
+    for (let r = 0; r < N; r++) g.push(new Array(N).fill(null));
+    S.tiles.forEach(t => { g[t.r][t.c] = t; });
+    S.stones.forEach(s => { g[s.r][s.c] = s; });
+    return g;
+  }
+  function emptyCells() {
+    const g = occupancy(), out = [];
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) if (!g[r][c]) out.push([r, c]);
+    return out;
+  }
+
+  /* ========================= 生成 ========================= */
+  function spawnTile() {
+    const cells = emptyCells();
+    if (!cells.length) return null;
+    const [r, c] = cells[(Math.random() * cells.length) | 0];
+    const d = DIFFS[S.diff];
+    const v = Math.random() < 0.9 ? 2 : 4;
+    const boost = Math.random() < d.boostP ? d.boostLife : 0;
+    const t = { id: uid++, r: r, c: c, v: v, boost: boost };
+    S.tiles.push(t);
+    return t;
+  }
+
+  function spawnStone() {
+    const d = DIFFS[S.diff];
+    if (S.stones.length >= d.stoneCap) return null;
+    if (emptyCells().length < 3) return null;
+    const g = occupancy();
+    const cands = [];
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+      if (g[r][c]) continue;
+      let emptyN = 0, stoneN = 0;
+      const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+      for (let k = 0; k < 4; k++) {
+        const rr = r + dirs[k][0], cc = c + dirs[k][1];
+        if (rr < 0 || cc < 0 || rr >= N || cc >= N) continue;
+        if (!g[rr][cc]) emptyN++;
+        else if (g[rr][cc].isStone) stoneN++;
+      }
+      if (emptyN >= 2 && stoneN === 0) cands.push([r, c]);
+    }
+    if (!cands.length) return null;
+    const [r, c] = cands[(Math.random() * cands.length) | 0];
+    const s = { id: uid++, r: r, c: c, cracks: 0, isStone: true };
+    S.stones.push(s);
+    return s;
+  }
+
+  /* ========================= 移动模拟 ========================= */
+  function simulate(dir) {
+    const g = occupancy();
+    const anim = [];
+    const survivors = [];
+    const merged = [];
+    const merges = [];
+    let moved = false, gained = 0;
+
+    for (let i = 0; i < N; i++) {
+      /* 按移动方向生成一条线的坐标序列（先到达的在前） */
+      const line = [];
+      for (let j = 0; j < N; j++) {
+        let r, c;
+        if (dir === 'left')       { r = i;          c = j; }
+        else if (dir === 'right') { r = i;          c = N - 1 - j; }
+        else if (dir === 'up')    { r = j;          c = i; }
+        else                      { r = N - 1 - j;  c = i; }
+        line.push([r, c]);
+      }
+
+      let seg = [];
+      const flush = function () {
+        if (!seg.length) return;
+        const segTiles = [];
+        for (let k = 0; k < seg.length; k++) {
+          const o = g[seg[k][0]][seg[k][1]];
+          if (o && !o.isStone) segTiles.push(o);
+        }
+        let w = 0, k = 0;
+        while (k < segTiles.length) {
+          const a = segTiles[k];
+          const dst = seg[w];
+          const nb = segTiles[k + 1];
+          if (nb && nb.v === a.v) {
+            let v = a.v * 2;
+            const boosted = !!(a.boost || nb.boost);
+            if (boosted) v *= 2;
+            anim.push({ id: a.id, r: dst[0], c: dst[1], die: true });
+            anim.push({ id: nb.id, r: dst[0], c: dst[1], die: true });
+            merged.push({ id: uid++, r: dst[0], c: dst[1], v: v, boost: 0 });
+            merges.push({ r: dst[0], c: dst[1], v: v });
+            gained += v;
+            moved = true;
+            w++; k += 2;
+          } else {
+            if (a.r !== dst[0] || a.c !== dst[1]) moved = true;
+            anim.push({ id: a.id, r: dst[0], c: dst[1] });
+            survivors.push({ id: a.id, r: dst[0], c: dst[1], v: a.v, boost: a.boost });
+            w++; k++;
+          }
+        }
+        seg = [];
+      };
+
+      for (let k = 0; k < line.length; k++) {
+        const o = g[line[k][0]][line[k][1]];
+        if (o && o.isStone) flush();
+        else seg.push(line[k]);
+      }
+      flush();
+    }
+    return { anim: anim, survivors: survivors, merged: merged, merges: merges, moved: moved, gained: gained };
+  }
+
+  /* ========================= 渲染 ========================= */
+  function makeTileEl(t) {
+    const el = document.createElement('div');
+    el.className = 'tile';
+    const v = document.createElement('span');
+    v.className = 'v';
+    el.appendChild(v);
+    return el;
+  }
+
+  function styleTile(el, t) {
+    const key = t.v > 2048 ? '2048' : String(t.v);
+    el.dataset.v = key;
+    el.classList.toggle('big', t.v > 2048);
+    el.style.fontSize = fontSizeFor(t.v);
+    el.querySelector('.v').textContent = t.v;
+
+    let badge = el.querySelector('.boost');
+    if (t.boost > 0) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'boost';
+        badge.innerHTML = '<b>×2</b><i></i>';
+        el.appendChild(badge);
+      }
+      badge.querySelector('i').textContent = t.boost;
+      badge.style.opacity = t.boost <= 1 ? '0.75' : '1';
+    } else if (badge) {
+      badge.remove();
+    }
+  }
+
+  function makeStoneEl(s) {
+    const d = DIFFS[S.diff];
+    const el = document.createElement('div');
+    el.className = 'stone';
+    const pips = document.createElement('div');
+    pips.className = 'pips';
+    for (let i = 0; i < d.crackMax; i++) {
+      const p = document.createElement('div');
+      p.className = 'pip';
+      pips.appendChild(p);
+    }
+    el.appendChild(pips);
+    return el;
+  }
+
+  function styleStone(el, s) {
+    const d = DIFFS[S.diff];
+    const pips = el.querySelectorAll('.pip');
+    for (let i = 0; i < pips.length; i++) {
+      pips[i].classList.toggle('gone', i < s.cracks);
+    }
+    el.dataset.cracks = s.cracks;
+  }
+
+  function syncTiles(pop) {
+    const alive = new Set();
+    for (let i = 0; i < S.tiles.length; i++) alive.add(S.tiles[i].id);
+
+    elMap.forEach(function (el, id) {
+      if (!alive.has(id)) { el.remove(); elMap.delete(id); }
+    });
+
+    for (let i = 0; i < S.tiles.length; i++) {
+      const t = S.tiles[i];
+      let el = elMap.get(t.id);
+      if (!el) {
+        el = makeTileEl(t);
+        styleTile(el, t);
+        applyPos(el, t.r, t.c);
+        if (pop) {
+          el.classList.add('spawn');
+          el.addEventListener('animationend', function h() {
+            el.classList.remove('spawn');
+            el.removeEventListener('animationend', h);
+          });
+        }
+        tilesEl.appendChild(el);
+        elMap.set(t.id, el);
+      } else {
+        styleTile(el, t);
+        applyPos(el, t.r, t.c);
+      }
+    }
+  }
+
+  function syncStones(pop) {
+    const alive = new Set();
+    for (let i = 0; i < S.stones.length; i++) alive.add(S.stones[i].id);
+
+    stoneElMap.forEach(function (el, id) {
+      if (!alive.has(id)) {
+        if (el.classList.contains('flash')) {
+          /* 碎裂残影必须在下一手落子前清掉，否则可能与新方块短暂重叠 */
+          setTimeout(function () { el.remove(); }, 170);
+        } else {
+          el.remove();
+        }
+        stoneElMap.delete(id);
+      }
+    });
+
+    for (let i = 0; i < S.stones.length; i++) {
+      const s = S.stones[i];
+      let el = stoneElMap.get(s.id);
+      if (!el) {
+        el = makeStoneEl(s);
+        styleStone(el, s);
+        applyPos(el, s.r, s.c);
+        tilesEl.appendChild(el);
+        stoneElMap.set(s.id, el);
+      } else {
+        styleStone(el, s);
+        applyPos(el, s.r, s.c);
+      }
+    }
+  }
+
+  function renderAll() {
+    computeMetrics();
+    buildGrid();
+    elMap.forEach(el => el.remove());
+    stoneElMap.forEach(el => el.remove());
+    elMap.clear();
+    stoneElMap.clear();
+    tilesEl.classList.add('noanim');
+    syncTiles(false);
+    syncStones(false);
+    void tilesEl.offsetWidth;
+    tilesEl.classList.remove('noanim');
+    updateHUD();
+  }
+
+  /* ========================= HUD ========================= */
+  function updateHUD() {
+    scoreEl.textContent = S.score;
+    bestEl.textContent = Math.max(best, S.score);
+    movesEl.textContent = S.moves;
+    stoneCntEl.textContent = S.stones.length + '/' + DIFFS[S.diff].stoneCap;
+    const u = S.undoLeft;
+    undoCntEl.textContent = u >= 99 ? '∞' : u;
+    undoBtn.disabled = u <= 0 || S.history.length === 0;
+    diffSeg.querySelectorAll('button').forEach(function (b) {
+      b.classList.toggle('on', b.dataset.d === S.diff);
+    });
+  }
+
+  function bumpScore() {
+    const box = document.getElementById('scoreBox');
+    box.classList.add('bump');
+    setTimeout(() => box.classList.remove('bump'), 120);
+  }
+
+  function rememberBest() {
+    if (S.score > best) {
+      best = S.score;
+      try { localStorage.setItem(BEST_KEY, String(best)); } catch (e) { /* ignore */ }
+    }
+  }
+
+  /* ========================= 存档 ========================= */
+  function save() {
+    try {
+      const data = {
+        diff: S.diff, tiles: S.tiles, stones: S.stones, score: S.score,
+        moves: S.moves, sinceStone: S.sinceStone, undoLeft: S.undoLeft,
+        history: S.history.slice(-8), won: S.won, wonShown: S.wonShown, over: S.over, uid: uid
+      };
+      localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+    } catch (e) { /* 隐私模式下忽略 */ }
+  }
+  function load() {
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return false;
+      const d = JSON.parse(raw);
+      if (!d || !d.tiles || !DIFFS[d.diff]) return false;
+      S = {
+        diff: d.diff, tiles: d.tiles, stones: d.stones || [], score: d.score || 0,
+        moves: d.moves || 0, sinceStone: d.sinceStone || 0,
+        undoLeft: typeof d.undoLeft === 'number' ? d.undoLeft : DIFFS[d.diff].undos,
+        history: d.history || [], won: !!d.won, wonShown: !!d.wonShown, over: !!d.over
+      };
+      S.stones.forEach(s => { s.isStone = true; });
+      uid = Math.max(d.uid || 1, 1);
+      S.tiles.concat(S.stones).forEach(o => { if (o.id >= uid) uid = o.id + 1; });
+      return true;
+    } catch (e) { return false; }
+  }
+
+  /* ========================= 快照 / 撤销 ========================= */
+  function snapshot() {
+    return JSON.stringify({
+      tiles: S.tiles, stones: S.stones, score: S.score, moves: S.moves,
+      sinceStone: S.sinceStone, won: S.won, over: S.over
+    });
+  }
+  function pushHistory() {
+    S.history.push(snapshot());
+    if (S.history.length > 20) S.history.shift();
+  }
+  function doUndo() {
+    if (modalOpen || busy) return;
+    if (S.undoLeft <= 0 || !S.history.length) return;
+    const raw = S.history.pop();
+    const o = JSON.parse(raw);
+    S.tiles = o.tiles;
+    S.stones = o.stones;
+    S.stones.forEach(s => { s.isStone = true; });
+    S.score = o.score;
+    S.moves = o.moves;
+    S.sinceStone = o.sinceStone;
+    S.won = o.won;
+    S.over = o.over;
+    S.undoLeft--;
+    S.tiles.concat(S.stones).forEach(t => { if (t.id >= uid) uid = t.id + 1; });
+    renderAll();
+    save();
+  }
+
+  /* ========================= 提交一步 ========================= */
+  function applyCommit(res) {
+    const d = DIFFS[S.diff];
+
+    /* 1. 存活方块：翻倍标记寿命 -1 */
+    const next = [];
+    for (let i = 0; i < res.survivors.length; i++) {
+      const t = res.survivors[i];
+      next.push({ id: t.id, r: t.r, c: t.c, v: t.v, boost: t.boost > 0 ? t.boost - 1 : 0 });
+    }
+    for (let i = 0; i < res.merged.length; i++) next.push(res.merged[i]);
+    S.tiles = next;
+    S.score += res.gained;
+
+    /* 2. 石块裂纹：本回合每个合并点，紧邻石块 +1 */
+    const doomed = new Set();
+    for (let i = 0; i < res.merges.length; i++) {
+      const m = res.merges[i];
+      for (let j = 0; j < S.stones.length; j++) {
+        const s = S.stones[j];
+        if (Math.abs(s.r - m.r) + Math.abs(s.c - m.c) === 1) {
+          s.cracks++;
+          if (s.cracks >= d.crackMax) doomed.add(s);
+        }
+      }
+    }
+    if (doomed.size > 0) {
+      doomed.forEach(function (s) {
+        const el = stoneElMap.get(s.id);
+        if (el) { el.classList.remove('hit'); el.classList.add('flash'); }
+      });
+      S.stones = S.stones.filter(s => !doomed.has(s));
+      S.score += d.stoneBonus * doomed.size;
+    }
+
+    S.moves++;
+    S.sinceStone++;
+
+    /* 3. 生成新方块 */
+    spawnTile();
+
+    /* 4. 石块投放 */
+    if (S.sinceStone >= d.stoneEvery) {
+      if (spawnStone()) S.sinceStone = 0;
+    }
+
+    /* 5. 渲染（新方块与新石块带弹出动画） */
+    syncTiles(true);
+    syncStones(false);
+
+    /* 6. 碎裂的石块先闪一下再被移除——为保持简洁，此处直接重渲染 */
+    updateHUD();
+    bumpScore();
+
+    /* 7. 胜利 / 结束判定 */
+    if (!S.won && !S.wonShown) {
+      for (let i = 0; i < S.tiles.length; i++) {
+        if (S.tiles[i].v >= 2048) {
+          S.won = true;
+          S.wonShown = true;
+          setTimeout(showWin, 260);
+          break;
+        }
+      }
+    }
+    if (!canMove()) {
+      S.over = true;
+      setTimeout(showOver, 320);
+    }
+
+    rememberBest();
+    updateHUD();
+    save();
+  }
+
+  function canMove() {
+    const g = occupancy();
+    let hasEmpty = false;
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) if (!g[r][c]) hasEmpty = true;
+    if (hasEmpty) return true;
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+      const a = g[r][c];
+      if (!a || a.isStone) continue;
+      if (r + 1 < N) { const b = g[r + 1][c]; if (b && !b.isStone && b.v === a.v) return true; }
+      if (c + 1 < N) { const b = g[r][c + 1]; if (b && !b.isStone && b.v === a.v) return true; }
+    }
+    return false;
+  }
+
+  /* ========================= 输入处理 ========================= */
+  function performMove(dir) {
+    if (busy || modalOpen || S.over) return;
+    const res = simulate(dir);
+    if (!res.moved) return;
+
+    pushHistory();
+    busy = true;
+
+    /* 先把要移动/要消失的方块滑到目标位 */
+    for (let i = 0; i < res.anim.length; i++) {
+      const a = res.anim[i];
+      const el = elMap.get(a.id);
+      if (!el) continue;
+      applyPos(el, a.r, a.c);
+      if (a.die) el.classList.add('dying');
+    }
+    /* 石块的受击反馈 */
+    if (res.merges.length) {
+      S.stones.forEach(function (s) {
+        const el = stoneElMap.get(s.id);
+        if (!el) return;
+        for (let i = 0; i < res.merges.length; i++) {
+          const m = res.merges[i];
+          if (Math.abs(s.r - m.r) + Math.abs(s.c - m.c) === 1) {
+            el.classList.remove('hit');
+            void el.offsetWidth;
+            el.classList.add('hit');
+            break;
+          }
+        }
+      });
+    }
+
+    setTimeout(function () {
+      applyCommit(res);
+      busy = false;
+    }, 108);
+  }
+
+  /* ========================= 弹窗 ========================= */
+  function openOverlay(title, html, primaryText, secondaryText, onPrimary, onSecondary) {
+    ovTitle.textContent = title;
+    ovText.innerHTML = html;
+    ovPrimary.textContent = primaryText;
+    ovSecondary.textContent = secondaryText;
+    ovPrimary.onclick = function () { closeOverlay(); onPrimary && onPrimary(); };
+    ovSecondary.onclick = function () { closeOverlay(); onSecondary && onSecondary(); };
+    overlay.classList.add('show');
+    modalOpen = true;
+  }
+  function closeOverlay() {
+    overlay.classList.remove('show');
+    modalOpen = false;
+  }
+  function showWin() {
+    openOverlay('达成 2048', '当前分数<span class="big">' + S.score + '</span>可以继续冲更高数字。',
+      '继续挑战', '新游戏',
+      function () { S.won = true; save(); },
+      function () { startNew(S.diff); });
+  }
+  function showOver() {
+    const canUndo = S.undoLeft > 0 && S.history.length > 0;
+    openOverlay('棋盘卡住了',
+      '最终分数<span class="big">' + S.score + '</span>步数 ' + S.moves + ' · 最高 ' + Math.max(best, S.score),
+      '新游戏', canUndo ? '撤销一步' : '换个难度',
+      function () { startNew(S.diff); },
+      function () {
+        if (canUndo) { S.over = false; doUndo(); }
+        else { startNew(S.diff === 'hard' ? 'standard' : 'casual'); }
+      });
+  }
+
+  /* ========================= 开局 ========================= */
+  function startNew(diff) {
+    S = newState(diff);
+    uid = 1;
+    spawnTile();
+    spawnTile();
+    renderAll();
+    save();
+  }
+
+  /* ========================= 事件绑定 ========================= */
+  const KEYMAP = {
+    ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down',
+    a: 'left', d: 'right', w: 'up', s: 'down',
+    A: 'left', D: 'right', W: 'up', S: 'down',
+    h: 'left', l: 'right', k: 'up', j: 'down'
+  };
+
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const d = KEYMAP[e.key];
+    if (!d) return;
+    e.preventDefault();
+    performMove(d);
+  });
+
+  /* 触屏滑动 */
+  let tsX = 0, tsY = 0, tracking = false;
+  boardEl.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1) return;
+    tracking = true;
+    tsX = e.touches[0].clientX;
+    tsY = e.touches[0].clientY;
+  }, { passive: true });
+  boardEl.addEventListener('touchmove', function (e) {
+    if (tracking) e.preventDefault();
+  }, { passive: false });
+  boardEl.addEventListener('touchend', function (e) {
+    if (!tracking) return;
+    tracking = false;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - tsX, dy = t.clientY - tsY;
+    const ax = Math.abs(dx), ay = Math.abs(dy);
+    if (Math.max(ax, ay) < 22) return;
+    if (ax > ay) performMove(dx > 0 ? 'right' : 'left');
+    else performMove(dy > 0 ? 'down' : 'up');
+  }, { passive: true });
+
+  /* 鼠标拖拽也能滑（桌面备用） */
+  let msX = 0, msY = 0, msDown = false;
+  boardEl.addEventListener('mousedown', function (e) {
+    if (e.button !== 0) return;
+    msDown = true; msX = e.clientX; msY = e.clientY;
+  });
+  window.addEventListener('mouseup', function (e) {
+    if (!msDown) return;
+    msDown = false;
+    const dx = e.clientX - msX, dy = e.clientY - msY;
+    const ax = Math.abs(dx), ay = Math.abs(dy);
+    if (Math.max(ax, ay) < 26) return;
+    if (ax > ay) performMove(dx > 0 ? 'right' : 'left');
+    else performMove(dy > 0 ? 'down' : 'up');
+  });
+
+  diffSeg.addEventListener('click', function (e) {
+    const b = e.target.closest('button[data-d]');
+    if (!b) return;
+    const d = b.dataset.d;
+    if (d === S.diff) return;
+    if (S.moves === 0) { startNew(d); return; }
+    openOverlay('切换难度',
+      '换成「' + DIFFS[d].name + '」会重新开局，最高分保留。',
+      '切换', '取消',
+      function () { startNew(d); }, null);
+  });
+
+  undoBtn.addEventListener('click', doUndo);
+  newBtn.addEventListener('click', function () {
+    if (S.moves === 0) { startNew(S.diff); return; }
+    openOverlay('开始新局？', '当前进度会被清空，最高分保留。', '开新局', '先玩着',
+      function () { startNew(S.diff); }, null);
+  });
+
+  /* 尺寸变化 */
+  let rzTimer = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(rzTimer);
+    rzTimer = setTimeout(function () {
+      computeMetrics();
+      tilesEl.classList.add('noanim');
+      elMap.forEach(function (el, id) {
+        const t = S.tiles.find(x => x.id === id);
+        if (t) { el.style.fontSize = fontSizeFor(t.v); applyPos(el, t.r, t.c); }
+      });
+      stoneElMap.forEach(function (el, id) {
+        const s = S.stones.find(x => x.id === id);
+        if (s) applyPos(el, s.r, s.c);
+      });
+      void tilesEl.offsetWidth;
+      tilesEl.classList.remove('noanim');
+    }, 100);
+  });
+
+  /* ========================= 启动 ========================= */
+  function boot() {
+    if (!load()) {
+      S = newState('standard');
+      uid = 1;
+      spawnTile();
+      spawnTile();
+    }
+    renderAll();
+    rememberBest();
+    updateHUD();
+    save();
+    /* 读档时若棋盘其实已死（例如上次异常退出），补一次判定，避免卡在死局界面 */
+    if (!S.over && !canMove()) {
+      S.over = true;
+      save();
+    }
+    if (S.over) setTimeout(showOver, 400);
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>
